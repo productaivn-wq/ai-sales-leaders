@@ -1,0 +1,220 @@
+<!DOCTYPE html>
+<html lang="vi"><head><meta charset="utf-8"/><meta name="viewport" content="width=device-width, initial-scale=1"/>
+<title>Cẩm nang câu lệnh mẫu Buổi 3 · Đọc Tính Cách DISC & Quản Lý Danh Sách Khách Hàng (2, 3, 4, 5)</title>
+<link href="https://fonts.googleapis.com/css2?family=Be+Vietnam+Pro:ital,wght@0,400;0,500;0,600;0,700;0,800;1,400&display=swap" rel="stylesheet"/>
+<style>
+:root{--bg:#FFFDF9;--card:#FFFFFF;--line:#E7E5E4;--ink:#1C1917;--ink2:#57534E;--orange:#E85D04;--orange-ink:#C2410C;--slate:#334155;--tint:#FFF4EA;--tint-line:#FBD3B4}
+*{box-sizing:border-box;margin:0;padding:0}
+html,body{height:100%;background:#E7E5E4;font-family:'Be Vietnam Pro',system-ui,sans-serif;color:var(--ink);-webkit-font-smoothing:antialiased}
+#viewport{position:fixed;inset:0 0 42px 0;overflow:hidden}
+#stage{position:absolute;left:50%;top:50%;width:1920px;height:1080px;transform-origin:center;background:var(--bg);border-radius:12px;box-shadow:0 24px 64px -16px rgba(28,25,23,.22);overflow:hidden}
+.slide{position:absolute;inset:0;padding:52px 88px 48px;display:flex;flex-direction:column;opacity:0;visibility:hidden}
+.slide.active{opacity:1;visibility:visible}
+.bar{display:flex;align-items:center;gap:10px;padding-bottom:18px;border-bottom:1px solid var(--line);white-space:nowrap}
+.step{font-size:16px;font-weight:600;color:var(--ink2);padding:7px 14px;border:1px solid var(--line);border-radius:8px;background:var(--card);cursor:pointer;text-decoration:none;white-space:nowrap}
+.step.on{background:var(--orange);border-color:var(--orange);color:#fff;font-weight:700}
+.page{margin-left:auto;font-size:16px;color:var(--ink2);font-weight:600;white-space:nowrap}
+.head{margin-top:28px}
+.eyebrow{font-size:18px;font-weight:700;letter-spacing:.07em;text-transform:uppercase;color:var(--orange-ink)}
+h1{margin-top:8px;font-size:52px;line-height:1.13;font-weight:800;letter-spacing:-.02em}
+.lead{margin-top:10px;font-size:26px;line-height:1.4;color:var(--ink2)}
+.body{flex:1 1 0;min-height:0;margin:28px 0 22px;display:flex;align-items:stretch}
+.body>*{flex:1;min-width:0}
+.g2{display:grid;grid-template-columns:1fr 1fr;gap:28px}
+.g3{display:grid;grid-template-columns:repeat(3,1fr);gap:28px}
+.g4{display:grid;grid-template-columns:repeat(4,1fr);gap:24px}
+.gp{display:grid;grid-template-columns:5fr 7fr;gap:28px}
+.gp-prompt{display:grid;grid-template-columns:4fr 8fr;gap:28px}
+.card{background:var(--card);border:1px solid var(--line);border-radius:16px;padding:30px 34px;display:flex;flex-direction:column;gap:12px;box-shadow:0 1px 2px rgba(28,25,23,.04),0 10px 28px -14px rgba(28,25,23,.1)}
+.card.warm{background:var(--tint);border-color:var(--tint-line)}
+.card.click{cursor:pointer;transition:border-color .15s,transform .15s}
+.card.click:hover{border-color:var(--orange);transform:translateY(-2px)}
+.label{font-size:17px;font-weight:700;letter-spacing:.06em;text-transform:uppercase;color:var(--ink2)}
+.card.warm .label{color:var(--orange-ink)}
+.card h3{font-size:30px;line-height:1.22;font-weight:700;color:var(--ink)}
+.card p,.card li{font-size:24px;line-height:1.45;color:var(--ink2)}
+.card p b,.card li b{color:var(--ink)}
+.card ul{list-style:none;display:flex;flex-direction:column;gap:10px}
+.card li{padding-left:22px;position:relative}
+.card li::before{content:"";position:absolute;left:0;top:.58em;width:8px;height:8px;border-radius:50%;background:var(--orange)}
+.big{font-size:54px;line-height:1.05;font-weight:800;color:var(--orange);letter-spacing:-.02em}
+.num{font-size:19px;font-weight:800;color:var(--orange-ink);letter-spacing:.06em;text-transform:uppercase}
+.person{justify-content:center}
+.person .phone{font-size:30px;font-weight:700;color:var(--slate)}
+.commits{display:flex;flex-direction:column;gap:18px}
+.commit{flex:1;display:grid;grid-template-columns:170px 1fr;gap:28px;align-items:center;background:var(--card);border:1px solid var(--line);border-radius:16px;padding:22px 32px}
+.commit b{font-size:24px;font-weight:800;color:var(--orange-ink);text-transform:uppercase;letter-spacing:.04em}
+.commit h4{font-size:29px;font-weight:700;line-height:1.2}
+.commit p{margin-top:6px;font-size:24px;line-height:1.4;color:var(--ink2)}
+.btn{margin-top:auto;align-self:flex-start;display:inline-flex;align-items:center;gap:8px;font:700 20px 'Be Vietnam Pro',sans-serif;color:#fff;background:var(--orange);border:none;border-radius:10px;padding:12px 22px;text-decoration:none;cursor:pointer}
+.btn.alt{background:var(--slate)}
+.tbl{border:1px solid var(--line);border-radius:16px;overflow:hidden;background:var(--card);display:flex}
+table{width:100%;height:100%;border-collapse:collapse;table-layout:fixed}
+th{font-size:21px;font-weight:700;text-align:left;padding:13px 22px;background:var(--slate);color:#fff}
+th.pick{background:var(--orange)}
+td{font-size:20.5px;line-height:1.32;padding:11px 22px;border-top:1px solid var(--line);color:var(--ink2);vertical-align:middle}
+td:first-child{font-weight:700;color:var(--ink)}
+td b{color:var(--ink)}
+td.pick{background:var(--tint);color:var(--ink);font-weight:600}
+td .blank{display:inline-block;font-size:21px;font-weight:600;color:var(--ink2);border:1px dashed #A8A29E;border-radius:8px;padding:4px 12px;background:#FAFAF9}
+.tip{display:flex;gap:16px;align-items:center;justify-content:space-between;background:var(--card);border:1px solid var(--line);border-radius:14px;padding:16px 26px;font-size:22px;line-height:1.4;color:var(--ink2)}
+.tip b{color:var(--slate)}
+.tip .tbtn{flex:none;font:700 18px 'Be Vietnam Pro',sans-serif;color:#fff;background:var(--slate);border:none;border-radius:8px;padding:10px 18px;text-decoration:none;cursor:pointer}
+.tip .qlink{color:var(--orange-ink);font-weight:700;cursor:pointer;text-decoration:underline;margin:0 4px}
+/* Prompt template presentation box */
+.pbox{background:#FFFFFF;border:1px solid var(--line);border-radius:16px;padding:18px 24px;font:500 15.2px/1.35 'Be Vietnam Pro',system-ui,sans-serif;color:var(--ink);white-space:pre-wrap;overflow:hidden;box-shadow:0 1px 2px rgba(28,25,23,.04),0 10px 28px -14px rgba(28,25,23,.1)}
+.pbox .sec{font-weight:800;color:var(--orange-ink)}
+.pbox .var{background:var(--tint);border:1px solid var(--tint-line);color:var(--orange-ink);font-weight:700;padding:1px 6px;border-radius:5px}
+.vlist{display:flex;flex-direction:column;gap:8px;margin-top:2px}
+.vitem{font-size:15.5px;line-height:1.32;color:var(--ink2);padding-bottom:6px;border-bottom:1px solid var(--line)}
+.vitem:last-child{border-bottom:none;padding-bottom:0}
+.vitem code{font:700 14.5px 'Be Vietnam Pro',sans-serif;color:var(--orange-ink);background:var(--tint);padding:2px 7px;border-radius:5px;display:inline-block;margin-bottom:2px}
+#p0 .g3{gap:20px}
+#p0 .card{padding:20px 26px;gap:8px}
+#p0 .card h3{font-size:25px;line-height:1.2}
+#p0 .card p{font-size:19px;line-height:1.36}
+#p0 .btn{font-size:17px;padding:9px 16px}
+.slide.pslide{padding:40px 80px 36px}
+.slide.pslide .head{margin-top:16px}
+.slide.pslide h1{font-size:40px;line-height:1.12;margin-top:6px}
+.slide.pslide .lead{font-size:21px;line-height:1.34;margin-top:6px}
+.slide.pslide .body{margin:16px 0 14px}
+.slide.pslide .card{padding:20px 24px;gap:8px}
+.slide.pslide .card h3{font-size:23px;line-height:1.2}
+.slide.pslide .tip{padding:12px 22px;font-size:19px}
+/* Minimalist Bottom Navigation Bar */
+#nav,#nav-bar{position:fixed;left:0;right:0;bottom:0;height:42px;display:flex;align-items:center;justify-content:center;gap:8px;padding:0 16px;background:var(--bg);border-top:1px solid var(--line);z-index:100;overflow-x:auto}
+#nav button,#nav a,#nav-bar button,#nav-bar a{font:600 13px/1 'Be Vietnam Pro',sans-serif;height:28px;padding:0 12px;display:inline-flex;align-items:center;justify-content:center;white-space:nowrap;color:var(--ink2);background:var(--card);border:1px solid var(--line);border-radius:7px;cursor:pointer;text-decoration:none;flex:none}
+#nav button:hover,#nav a:hover,#nav-bar button:hover,#nav-bar a:hover{border-color:var(--orange);color:var(--orange-ink)}
+#nav button.on,#nav-bar button.on,#nav a.on,#nav-bar a.on{background:var(--orange);border-color:var(--orange);color:#fff;font-weight:700}
+#nav select,#nav-bar select{font:500 13px/1 'Be Vietnam Pro',sans-serif;height:28px;padding:0 10px;border:1px solid var(--line);border-radius:7px;max-width:260px;background:var(--card);color:var(--ink);flex:none}
+#count,#counter{font:700 13px/1 'Be Vietnam Pro',sans-serif;color:var(--ink2);min-width:52px;text-align:center;white-space:nowrap;flex:none}
+/* Clean Modal */
+#prompt-modal{position:fixed;inset:0;background:rgba(28,25,23,.68);display:none;align-items:center;justify-content:center;z-index:500;padding:40px}
+#prompt-modal.open{display:flex}
+.modal-box{background:var(--bg);color:var(--ink);width:100%;max-width:1200px;border-radius:18px;border:2px solid var(--orange);padding:28px 36px;box-shadow:0 24px 64px rgba(0,0,0,.4);display:flex;flex-direction:column;gap:16px;max-height:86vh}
+.modal-header{display:flex;justify-content:space-between;align-items:center;border-bottom:1px solid var(--line);padding-bottom:12px}
+.modal-header h2{font-size:25px;font-weight:800;color:var(--orange-ink)}
+.modal-body{font-family:'Be Vietnam Pro',system-ui,sans-serif;font-size:18px;line-height:1.52;background:#fff;color:var(--ink);border:1px solid var(--line);padding:22px 26px;border-radius:12px;overflow-y:auto;white-space:pre-wrap;user-select:text}
+.modal-footer{display:flex;justify-content:flex-end;gap:12px}
+.modal-footer button,.modal-footer a{font:700 17px 'Be Vietnam Pro',sans-serif;padding:10px 20px;border-radius:8px;border:1px solid var(--line);cursor:pointer;background:#fff;color:var(--ink);text-decoration:none}
+.modal-footer button.primary{background:var(--orange);border-color:var(--orange);color:#fff}
+@media print{@page{size:1920px 1080px;margin:0}html,body{background:none}#nav,#nav-bar,#prompt-modal{display:none!important}#viewport{position:static;overflow:visible}
+#stage{position:static;transform:none!important;width:1920px;height:auto;border-radius:0;box-shadow:none;overflow:visible;background:none}
+.slide{position:relative;width:1920px;height:1080px;opacity:1;visibility:visible;break-after:page;background:var(--bg)}}
+</style></head><body>
+<div id="viewport"><div id="stage">
+<section class="slide active" id="p0"><div class="bar"><span class="step on" onclick="show(0)">Bìa & Mục lục</span><span class="step" onclick="show(1)">2 · Soi Facebook đoán tính cách</span><span class="step" onclick="show(2)">3 · Lập kế hoạch tuần (Đầu ra 1)</span><span class="step" onclick="show(3)">4 · Trả lời khi bị từ chối (5 bước)</span><span class="step" onclick="show(4)">5 · Đúc kết dạy người mới (Đầu ra 2)</span><span class="page">Cẩm nang câu lệnh Buổi 3 · Trang 01 / 05</span></div><div class="head"><div class="eyebrow">TRANG BÌA &amp; MỤC LỤC · CẨM NANG CÂU LỆNH MẪU BUỔI 3</div><h1>Bộ 4 câu lệnh mẫu Buổi 3: Đọc Tính Cách DISC & Quản Lý Danh Sách Khách Hàng (2, 3, 4, 5)</h1><p class="lead">Chọn câu lệnh bạn cần, điền thông tin người sắp gặp vào chỗ màu cam rồi dán vào công cụ AI.</p></div><div class="body"><div class="g2" style="grid-template-rows:1fr 1fr"><div class="card warm click" onclick="show(1)"><span class="num">Câu lệnh 2 · ChatGPT hoặc Claude</span><h3>Xem trang Facebook cá nhân để đoán tính cách và mở lời</h3><p>Dùng 30 giây trước khi nhắn tin hoặc đi gặp để biết người đối diện thuộc nhóm tính cách nào.</p><button class="btn" onclick="event.stopPropagation();show(1)">Mở Câu lệnh 2 →</button></div><div class="card click" onclick="show(2)"><span class="num">Câu lệnh 3 · ChatGPT hoặc Claude</span><h3>Lập kế hoạch tuần: gặp ai, trao gì, tiếp cận thế nào</h3><p>Dùng mỗi sáng thứ Hai — dán danh sách người quen từ file Excel vào để chọn người cần hẹn trong tuần.</p><button class="btn" onclick="event.stopPropagation();show(2)">Mở Câu lệnh 3 →</button></div><div class="card warm click" onclick="show(3)"><span class="num">Câu lệnh 4 · ChatGPT hoặc Claude</span><h3>Trả lời khi bị từ chối theo 5 bước của thầy Lê Minh Tuấn</h3><p>Dùng khi người mình mời hợp tác hoặc khách hàng nêu lý do từ chối, trì hoãn, hoặc xin về hỏi người nhà.</p><button class="btn" onclick="event.stopPropagation();show(3)">Mở Câu lệnh 4 →</button></div><div class="card click" onclick="show(4)"><span class="num">Câu lệnh 5 · ChatGPT hoặc Claude</span><h3>Đúc kết kinh nghiệm thành công thức và lịch 7 ngày cho người mới</h3><p>Dùng khi trưởng nhóm muốn đóng gói các ca làm thật trong file Excel thành tài liệu ngắn gọn dạy người mới.</p><button class="btn" onclick="event.stopPropagation();show(4)">Mở Câu lệnh 5 →</button></div></div></div><div class="tip"><span><b>Cách dùng nhanh:</b> Bấm vào từng ô để mở nguyên văn câu lệnh, hoặc dùng phím mũi tên <b>← →</b> trên bàn phím.</span><div style="display:flex;gap:10px"><a class="tbtn" href="https://productaivn-wq.github.io/ai-sales-leaders/slides_prompts_workshop_2.html">Cẩm nang câu lệnh Buổi 2 ↗</a><a class="tbtn" href="https://productaivn-wq.github.io/ai-sales-leaders/slides_workshop_3.html">← Quay lại bài giảng Buổi 3</a></div></div></section><section class="slide pslide" id="p2"><div class="bar"><span class="step" onclick="show(0)">Bìa & Mục lục</span><span class="step on" onclick="show(1)">2 · Soi Facebook đoán tính cách</span><span class="step" onclick="show(2)">3 · Lập kế hoạch tuần (Đầu ra 1)</span><span class="step" onclick="show(3)">4 · Trả lời khi bị từ chối (5 bước)</span><span class="step" onclick="show(4)">5 · Đúc kết dạy người mới (Đầu ra 2)</span><span class="page">Cẩm nang câu lệnh Buổi 3 · Trang 02 / 05</span></div><div class="head"><div class="eyebrow">BUỔI 3 · CÂU LỆNH 2 · DÁN VÀO CHATGPT HOẶC CLAUDE</div><h1>Xem trang Facebook cá nhân để đoán tính cách và mở lời</h1><p class="lead">Dùng 30 giây trước khi nhắn tin hoặc đi gặp để biết người đối diện thuộc nhóm tính cách nào.</p></div><div class="body"><div class="gp-prompt"><div class="card warm"><span class="label">Chỗ cần thay bằng thông tin thật</span><h3>Dán vào ChatGPT hoặc Claude</h3><div class="vlist"><div class="vitem"><code>{{MỤC_TIÊU}}</code><br/>Mời hợp tác làm thêm (hoặc: Tư vấn gói bảo vệ gia đình)</div><div class="vitem"><code>{{HỒ_SƠ}}</code><br/>Chị Lan, 34 tuổi, kế toán trưởng, đồng nghiệp cũ, 2 con nhỏ</div><div class="vitem"><code>{{ẢNH_FACEBOOK}}</code><br/>Ảnh đại diện mặc vest công sở; ảnh bìa hai con ở công viên</div><div class="vitem"><code>{{BÀI_ĐĂNG_GẦN_NHẤT}}</code><br/>Chia sẻ bài quyết toán thuế; nhắn tin: &#x27;Chị chỉ quen con số, sợ không có khiếu ăn nói&#x27;</div></div><button class="btn" id="cbtn-2" onclick="copyPrompt('2')">Chép Câu lệnh 2</button></div><pre class="pbox" id="ptxt-2"><span class="sec">[1. VAI TRÒ]</span>
+Bạn là người hướng dẫn giao tiếp theo phương pháp quan sát 2 trục tính cách (DISC) của thầy Lê Minh Tuấn.
+<span class="sec">[2. NHIỆM VỤ]</span>
+Dựa vào thông tin quan sát từ trang Facebook cá nhân (hoặc tin nhắn trước đó) để xác định nhóm tính cách của người sắp gặp và gợi ý cách mở lời tự nhiên.
+<span class="sec">[3. THÔNG TIN ĐIỀN VÀO]</span>
+- Mục tiêu buổi gặp: <span class="var">{{MỤC_TIÊU}}</span>
+- Hồ sơ cơ bản &amp; mối quan hệ: <span class="var">{{HỒ_SƠ}}</span>
+- Ảnh đại diện &amp; ảnh bìa Facebook: <span class="var">{{ẢNH_FACEBOOK}}</span>
+- Nội dung 2–3 bài đăng hoặc tin nhắn gần nhất: <span class="var">{{BÀI_ĐĂNG_GẦN_NHẤT}}</span>
+<span class="sec">[4. CÁC BƯỚC THỰC HIỆN]</span>
+- Bước 1 (Quan sát 2 trục kèm bằng chứng):
+  + Trục 1 — Nhịp độ: Nhanh, chủ động (nhóm D, I) hay Điềm tĩnh, từ tốn (nhóm S, C)? Chỉ rõ dấu hiệu từ ảnh và bài viết.
+  + Trục 2 — Mối quan tâm: Hướng về công việc, con số (nhóm D, C) hay Hướng về gia đình, con người (nhóm I, S)? Chỉ rõ dấu hiệu.
+- Bước 2 (Kết luận nhóm chính – phụ): Ghi rõ nhóm chính và nhóm phụ (ví dụ: C-S, S-I, D), mức độ chắc chắn (%) và 1 câu hỏi nhỏ trong 2 phút đầu gặp mặt để kiểm chứng lại. Nếu thông tin quá ít thì ghi rõ &quot;[Cần quan sát thêm]&quot; chứ không đoán mò.
+- Bước 3 (Cách tiếp cận và mở slide):
+  + Gợi ý dừng lâu ở trang slide nào trong bộ 6 trang (Người quyết đoán D: trang 4 bảng so sánh; Người vui vẻ I: trang 1 &amp; 3; Người điềm đạm S: trang 2 &amp; 5; Người cẩn trọng C: trang 3 &amp; 4).
+<span class="sec">[5. ĐỊNH DẠNG KẾT QUẢ &amp; TỰ KIỂM TRA]</span>
+Trình bày rõ 4 phần:
+1. Hai trục tính cách, nhóm chính – phụ, mức chắc chắn (%) và 1 câu hỏi kiểm chứng.
+2. Ba câu mở lời tự nhiên, ấm áp tại bàn cafe.
+3. Trang slide cần dừng lâu khi trò chuyện.
+4. Hai điều tuyệt đối tránh làm với người này.</pre></div></div><div class="tip"><span><b>Mẹo:</b> Sau khi bấm <b>Chép Câu lệnh 2</b>, dán vào ChatGPT hoặc Claude và thay các dòng <b>{{...}}</b> bằng thông tin người bạn sắp gặp.</span><a class="tbtn" href="https://productaivn-wq.github.io/ai-sales-leaders/prompt_outputs_review_sheet.html#p2">Xem kết quả chạy thử Câu lệnh 2 →</a></div></section><section class="slide pslide" id="p3"><div class="bar"><span class="step" onclick="show(0)">Bìa & Mục lục</span><span class="step" onclick="show(1)">2 · Soi Facebook đoán tính cách</span><span class="step on" onclick="show(2)">3 · Lập kế hoạch tuần (Đầu ra 1)</span><span class="step" onclick="show(3)">4 · Trả lời khi bị từ chối (5 bước)</span><span class="step" onclick="show(4)">5 · Đúc kết dạy người mới (Đầu ra 2)</span><span class="page">Cẩm nang câu lệnh Buổi 3 · Trang 03 / 05</span></div><div class="head"><div class="eyebrow">BUỔI 3 · CÂU LỆNH 3 · DÁN VÀO CHATGPT HOẶC CLAUDE</div><h1>Lập kế hoạch tuần: gặp ai, trao gì, tiếp cận thế nào</h1><p class="lead">Dùng mỗi sáng thứ Hai — dán danh sách người quen từ file Excel vào để chọn người cần hẹn trong tuần.</p></div><div class="body"><div class="gp-prompt"><div class="card warm"><span class="label">Chỗ cần thay bằng thông tin thật</span><h3>Dán vào ChatGPT hoặc Claude</h3><div class="vlist"><div class="vitem"><code>{{CƠ_HỘI_VÀ_SẢN_PHẨM}}</code><br/>Cộng tác viên 1–2 giờ/tối · Lộ trình đại lý &amp; quản lý · Gói bảo vệ trụ cột &amp; quỹ học vấn · Thẻ sức khỏe</div><div class="vitem"><code>{{THỜI_GIAN_TUẦN_NÀY}}</code><br/>3 buổi cafe trực tiếp (2 mời hợp tác, 1 tư vấn bảo vệ) và nhắn tin chăm sóc 4–5 người</div><div class="vitem"><code>{{DANH_SÁCH_TỪ_EXCEL}}</code><br/>Dán 5–10 dòng từ trang &#x27;Danh sách hồ sơ&#x27; và &#x27;Lịch sử chăm sóc&#x27; trong file Excel vào đây</div></div><button class="btn" id="cbtn-3" onclick="copyPrompt('3')">Chép Câu lệnh 3</button></div><pre class="pbox" id="ptxt-3"><span class="sec">[1. VAI TRÒ]</span>
+Bạn là người cố vấn lập kế hoạch chăm sóc ứng viên và khách hàng theo 6 bước làm quen (1. Biết đến mình -&gt; 2. Tìm hiểu -&gt; 3. Ngồi cafe 1-1 -&gt; 4. Cân nhắc -&gt; 5. Bắt đầu -&gt; 6. Giới thiệu thêm người).
+<span class="sec">[2. NHIỆM VỤ]</span>
+Đọc danh sách hồ sơ và lịch sử chăm sóc bên dưới để lập Kế hoạch tuần: chọn đúng người cần gặp cafe trực tiếp và người cần nhắn tin giữ ấm.
+<span class="sec">[3. THÔNG TIN ĐIỀN VÀO]</span>
+- Các cơ hội hợp tác &amp; gói sản phẩm đang có: <span class="var">{{CƠ_HỘI_VÀ_SẢN_PHẨM}}</span>
+- Thời gian dành ra trong tuần này: <span class="var">{{THỜI_GIAN_TUẦN_NÀY}}</span>
+- Danh sách trích từ file Excel:
+<span class="var">{{DANH_SÁCH_TỪ_EXCEL}}</span>
+<span class="sec">[4. CÁC BƯỚC THỰC HIỆN]</span>
+- Bước 1 (Chọn người gặp trực tiếp): Chỉ chọn những người đã ở Bước 3 hoặc Bước 4 (hoặc Bước 2 nhưng đã chủ động hẹn) để mời cafe tuần này. Những người mới ở Bước 1–2 chỉ nhắn tin làm ấm, tuyệt đối không vội gửi hợp đồng hay bảng minh họa dài.
+- Bước 2 (Trao đúng thứ họ cần): Khớp đúng mối lo của từng người với cơ hội làm thêm hoặc gói bảo vệ phù hợp (chép đúng con số từ dữ liệu đưa vào, không tự đổi số).
+- Bước 3 (Cách tiếp cận): Với mỗi người, ghi rõ tin nhắn hẹn/nhắc lịch, trang slide cần mở khi gặp, và tờ tóm tắt 1 trang để lại sau buổi gặp.
+<span class="sec">[5. ĐỊNH DẠNG KẾT QUẢ &amp; TỰ KIỂM TRA]</span>
+1. Bảng các buổi gặp cafe trong tuần (4 cột): [Gặp ai, tính cách, bước hiện tại &amp; lý do chọn] | [Trao cơ hội hay gói gì] | [Tiếp cận thế nào (Tin nhắn + Trang slide + Tờ 1 trang)] | [Thế nào là buổi gặp thành công].
+2. Danh sách những người nhắn tin giữ ấm trong tuần (kèm nội dung tin nhắn ngắn và lý do chưa mời ký ngay).</pre></div></div><div class="tip"><span><b>Mẹo:</b> Sau khi bấm <b>Chép Câu lệnh 3</b>, dán vào ChatGPT hoặc Claude và thay các dòng <b>{{...}}</b> bằng thông tin người bạn sắp gặp.</span><a class="tbtn" href="https://productaivn-wq.github.io/ai-sales-leaders/prompt_outputs_review_sheet.html#p3">Xem kết quả chạy thử Câu lệnh 3 →</a></div></section><section class="slide pslide" id="p4"><div class="bar"><span class="step" onclick="show(0)">Bìa & Mục lục</span><span class="step" onclick="show(1)">2 · Soi Facebook đoán tính cách</span><span class="step" onclick="show(2)">3 · Lập kế hoạch tuần (Đầu ra 1)</span><span class="step on" onclick="show(3)">4 · Trả lời khi bị từ chối (5 bước)</span><span class="step" onclick="show(4)">5 · Đúc kết dạy người mới (Đầu ra 2)</span><span class="page">Cẩm nang câu lệnh Buổi 3 · Trang 04 / 05</span></div><div class="head"><div class="eyebrow">BUỔI 3 · CÂU LỆNH 4 · DÁN VÀO CHATGPT HOẶC CLAUDE</div><h1>Trả lời khi bị từ chối theo 5 bước của thầy Lê Minh Tuấn</h1><p class="lead">Dùng khi người mình mời hợp tác hoặc khách hàng nêu lý do từ chối, trì hoãn, hoặc xin về hỏi người nhà.</p></div><div class="body"><div class="gp-prompt"><div class="card warm"><span class="label">Chỗ cần thay bằng thông tin thật</span><h3>Dán vào ChatGPT hoặc Claude</h3><div class="vlist"><div class="vitem"><code>{{VIỆC_ĐANG_LÀM}}</code><br/>Mời hợp tác làm thêm (hoặc: Tư vấn gói bảo vệ gia đình)</div><div class="vitem"><code>{{BƯỚC_HIỆN_TẠI}}</code><br/>Bước 2 — mới nhắn tin qua lại (hoặc Bước 4 — đang cân nhắc sau buổi cafe)</div><div class="vitem"><code>{{NHÓM_TÍNH_CÁCH}}</code><br/>Nhóm C-S (cẩn trọng, điềm đạm)</div><div class="vitem"><code>{{CÂU_TỪ_CHỐI}}</code><br/>Chị làm kế toán xưa nay chỉ quen con số, sợ không có khiếu ăn nói để đi tư vấn</div><div class="vitem"><code>{{HOÀN_CẢNH}}</code><br/>Kế toán trưởng 34 tuổi, 2 con nhỏ, lương 15 triệu đã chạm trần</div></div><button class="btn" id="cbtn-4" onclick="copyPrompt('4')">Chép Câu lệnh 4</button></div><pre class="pbox" id="ptxt-4"><span class="sec">[1. VAI TRÒ]</span>
+Bạn là người hướng dẫn gỡ băn khoăn trong tuyển dụng và tư vấn bảo hiểm theo 5 bước của thầy Lê Minh Tuấn, giữ trọn sự chân thành và thiện cảm.
+<span class="sec">[2. NHIỆM VỤ]</span>
+Tìm đúng nỗi sợ thật phía sau câu từ chối bên dưới và viết lời đáp 5 bước tự nhiên, đúng xưng hô, không tranh cãi.
+<span class="sec">[3. THÔNG TIN ĐIỀN VÀO]</span>
+- Việc đang làm: <span class="var">{{VIỆC_ĐANG_LÀM}}</span>
+- Đang ở bước thứ mấy: <span class="var">{{BƯỚC_HIỆN_TẠI}}</span>
+- Nhóm tính cách: <span class="var">{{NHÓM_TÍNH_CÁCH}}</span>
+- Nguyên văn câu từ chối vừa nghe: &quot;<span class="var">{{CÂU_TỪ_CHỐI}}</span>&quot;
+- Hoàn cảnh của người nói: <span class="var">{{HOÀN_CẢNH}}</span>
+<span class="sec">[4. CÁC BƯỚC THỰC HIỆN]</span>
+- Bước 1 (Đọc vị nỗi sợ thật): Giải thích vì sao một người thuộc <span class="var">{{NHÓM_TÍNH_CÁCH}}</span> ở <span class="var">{{BƯỚC_HIỆN_TẠI}}</span> lại nói câu đó (họ sợ mất uy tín, sợ bị ép chỉ tiêu, sợ mất thời gian của con, hay ngại tự quyết một mình?).
+- Bước 2 (Lắng nghe &amp; đồng cảm): Viết 1 câu đồng cảm nhẹ nhàng, tuyệt đối không phản bác hay dạy khôn.
+- Bước 3 (Hỏi để tìm đúng nỗi lo thật): Đặt 1 câu hỏi mở nhẹ nhàng để họ nói ra băn khoăn lớn nhất.
+- Bước 4 (Kể chuyện tương đồng &amp; trao công cụ): Nhắc một ví dụ gần gũi và chỉ rõ trang slide hoặc tờ tóm tắt 1 trang giúp họ yên tâm (không tự bịa số liệu ngoài thông tin đã cho).
+- Bước 5 (Xin một bước thử nhỏ): Chỉ xin một cuộc hẹn ngắn 15–20 phút hoặc gửi tờ tóm tắt 1 trang xem trước, không ép ký ngay.
+<span class="sec">[5. ĐỊNH DẠNG KẾT QUẢ &amp; TỰ KIỂM TRA]</span>
+Trình bày rõ 4 mục:
+1. Chẩn đoán nỗi sợ thật phía sau.
+2. Kịch bản 5 bước (kèm nguyên văn câu nói ở từng bước).
+3. Tin nhắn hỏi thăm gửi lại sau 24 giờ.
+4. Một dòng ghi chú ngắn để lưu vào trang &quot;Lịch sử chăm sóc&quot; trong file Excel.</pre></div></div><div class="tip"><span><b>Mẹo:</b> Sau khi bấm <b>Chép Câu lệnh 4</b>, dán vào ChatGPT hoặc Claude và thay các dòng <b>{{...}}</b> bằng thông tin người bạn sắp gặp.</span><a class="tbtn" href="https://productaivn-wq.github.io/ai-sales-leaders/prompt_outputs_review_sheet.html#p4">Xem kết quả chạy thử Câu lệnh 4 →</a></div></section><section class="slide pslide" id="p5"><div class="bar"><span class="step" onclick="show(0)">Bìa & Mục lục</span><span class="step" onclick="show(1)">2 · Soi Facebook đoán tính cách</span><span class="step" onclick="show(2)">3 · Lập kế hoạch tuần (Đầu ra 1)</span><span class="step" onclick="show(3)">4 · Trả lời khi bị từ chối (5 bước)</span><span class="step on" onclick="show(4)">5 · Đúc kết dạy người mới (Đầu ra 2)</span><span class="page">Cẩm nang câu lệnh Buổi 3 · Trang 05 / 05</span></div><div class="head"><div class="eyebrow">BUỔI 3 · CÂU LỆNH 5 · DÁN VÀO CHATGPT HOẶC CLAUDE</div><h1>Đúc kết kinh nghiệm thành công thức và lịch 7 ngày cho người mới</h1><p class="lead">Dùng khi trưởng nhóm muốn đóng gói các ca làm thật trong file Excel thành tài liệu ngắn gọn dạy người mới.</p></div><div class="body"><div class="gp-prompt"><div class="card warm"><span class="label">Chỗ cần thay bằng thông tin thật</span><h3>Dán vào ChatGPT hoặc Claude</h3><div class="vlist"><div class="vitem"><code>{{MUỐN_ĐÓNG_GÓI}}</code><br/>Quy trình 7 ngày đầu cho người mới và cách gỡ nỗi sợ nghề khi mời hợp tác</div><div class="vitem"><code>{{NGƯỜI_ÁP_DỤNG}}</code><br/>Người mới vào nhóm trong 7–30 ngày đầu, chưa có kinh nghiệm bán hàng</div><div class="vitem"><code>{{LỊCH_SỬ_CA_THẬT}}</code><br/>Dán 4–6 dòng từ trang &#x27;Lịch sử chăm sóc&#x27; trong file Excel vào đây</div></div><button class="btn" id="cbtn-5" onclick="copyPrompt('5')">Chép Câu lệnh 5</button></div><pre class="pbox" id="ptxt-5"><span class="sec">[1. VAI TRÒ]</span>
+Bạn là người hỗ trợ trưởng nhóm đúc kết kinh nghiệm thực tế thành công thức ngắn gọn và lịch làm việc từng ngày cho người mới bắt đầu.
+<span class="sec">[2. NHIỆM VỤ]</span>
+Đọc lịch sử các ca chăm sóc thành công bên dưới để rút ra bộ công thức bỏ túi và bảng lịch 7 ngày đầu cho người mới.
+<span class="sec">[3. THÔNG TIN ĐIỀN VÀO]</span>
+- Nội dung muốn đóng gói: <span class="var">{{MUỐN_ĐÓNG_GÓI}}</span>
+- Người sẽ dùng tài liệu này: <span class="var">{{NGƯỜI_ÁP_DỤNG}}</span>
+- Lịch sử các ca đã làm trong file Excel:
+<span class="var">{{LỊCH_SỬ_CA_THẬT}}</span>
+<span class="sec">[4. CÁC BƯỚC THỰC HIỆN]</span>
+- Bước 1: Tìm điểm chung giúp các ca trong dữ liệu thành công (đã đồng cảm điều gì, mở trang slide nào, gửi tài liệu gì?).
+- Bước 2 (Rút ra 3 công thức bỏ túi): Viết theo cấu trúc: &quot;Khi gặp [tình huống/nỗi lo] -&gt; Làm [các bước cụ thể] -&gt; Kết quả [điều đạt được]&quot;, kèm 1 câu thoại mẫu cho mỗi công thức.
+- Bước 3 (Lập bảng 7 ngày đầu): Chia đúng 7 ngày đầu, mỗi ngày một việc nhỏ làm dưới 15 phút để người mới có buổi hẹn đầu tiên mà không thấy áp lực. Chỉ dùng đúng con số có trong dữ liệu đưa vào.
+<span class="sec">[5. ĐỊNH DẠNG KẾT QUẢ &amp; TỰ KIỂM TRA]</span>
+- Phần A: 3 công thức bỏ túi (gồm cả mời hợp tác và tư vấn bảo vệ), mỗi công thức kèm 1 câu thoại mẫu.
+- Phần B: Bảng 7 ngày đầu gồm 5 cột: [Ngày] | [Việc cần làm (≤ 15 phút)] | [Công cụ dùng] | [Xong khi nào] | [Lỗi cần tránh].
+- Phần C: Kiểm chứng ngắn gọn rằng mọi việc đều dưới 15 phút/ngày và bám sát dữ liệu thực tế.</pre></div></div><div class="tip"><span><b>Mẹo:</b> Sau khi bấm <b>Chép Câu lệnh 5</b>, dán vào ChatGPT hoặc Claude và thay các dòng <b>{{...}}</b> bằng thông tin người bạn sắp gặp.</span><a class="tbtn" href="https://productaivn-wq.github.io/ai-sales-leaders/prompt_outputs_review_sheet.html#p5">Xem kết quả chạy thử Câu lệnh 5 →</a></div></section>
+</div></div>
+<div id="nav">
+  <button onclick="prev()">← Trước</button>
+  <span id="count">01 / 05</span>
+  <button onclick="next()">Sau →</button>
+  <button onclick="show(0)">Mục lục</button>
+  <select id="pick" onchange="show(+this.value)" aria-label="Chọn câu lệnh"></select>
+  <a href="https://productaivn-wq.github.io/ai-sales-leaders/slides_prompts_workshop_2.html">Câu lệnh Buổi 2</a>
+  <a href="https://productaivn-wq.github.io/ai-sales-leaders/slides_workshop_3.html">← Bài giảng Buổi 3</a>
+</div>
+<script>
+const RAW_PROMPTS = {"1A": "[1. VAI TRÒ]\nBạn là người hướng dẫn thiết kế bài trình chiếu 1-1 tại bàn cafe, hiểu văn hóa trò chuyện trọng tình cảm của người Việt và 4 nhóm tính cách (D - Quyết đoán, I - Vui vẻ, S - Điềm đạm, C - Cẩn trọng).\n\n[2. NHIỆM VỤ]\nViết dàn ý chi tiết gồm 6 trang slide (chiếu trên iPad hoặc máy tính) cho buổi gặp 1-1 theo thông tin bên dưới.\n\n[3. THÔNG TIN ĐIỀN VÀO]\n- Mục tiêu buổi gặp: {{MỤC_TIÊU}}\n- Người sẽ gặp & tính cách: {{NGƯỜI_GẶP}}\n- Câu chuyện mở đầu: {{CHUYỆN_MỞ_ĐẦU}}\n- Thông tin & con số chính: {{THÔNG_TIN_CHÍNH}}\n- Người trình bày: {{NGƯỜI_TRÌNH_BÀY}} (chỉ xuất hiện duy nhất 1 lần ở trang 5)\n\n[4. CÁC BƯỚC THỰC HIỆN]\n- Bước 1: Mở đầu trang 1 và trang 2 bằng câu chuyện đời thường, nhẹ nhàng; không dùng lời lẽ chèo kéo hay quảng cáo quá đà.\n- Bước 2: Sắp xếp 6 trang theo đúng 6 kiểu trình bày khác nhau:\n  + Trang 1 (Mở lời): Hai cột — bên trái là câu chuyện mở đầu, bên phải là 3 điều người nghe sẽ nhận được hôm nay.\n  + Trang 2 (Thấu cảm): Hai cột đối chiếu — bên trái là nỗi lo/cách làm cũ, bên phải là cách làm mới.\n  + Trang 3 (Điểm tựa): Ba ô điểm tựa kèm con số hoặc từ khóa nổi bật.\n  + Trang 4 (Bảng so sánh): Bảng so sánh rõ ràng giữa Phương án A và Phương án B.\n  + Trang 5 (Người đồng hành): Bên trái là danh thiếp người trình bày (ghi số điện thoại 1 lần duy nhất); bên phải là 3 cam kết đồng hành.\n  + Trang 6 (Bước tiếp theo): Ba bước khởi đầu nhẹ nhàng theo thứ tự thời gian.\n- Bước 3: Chỉ dùng đúng con số có trong mục [3]; nếu thiếu số liệu bảng minh họa thì ghi rõ \"[Điền từ bảng minh họa]\", không tự bịa số.\n\n[5. ĐỊNH DẠNG KẾT QUẢ & TỰ KIỂM TRA]\n- Mỗi trang trình bày rõ: [Số trang] -> [Kiểu trình bày] -> [Tiêu đề (tối đa 12 chữ) + Câu dẫn] -> [Nội dung từng ô (tối đa 22 chữ/ý)] -> [1 dòng gợi ý cách nói ở chân trang theo tính cách người nghe].\n- Cuối câu trả lời, lập bảng tự kiểm tra 5 điểm: (1) Mở lời trang 1–2 nhẹ nhàng; (2) Đủ 6 kiểu trình bày; (3) Mỗi ý ≤ 22 chữ, tiêu đề ≤ 12 chữ; (4) Số điện thoại chỉ ghi 1 lần ở trang 5; (5) Có gợi ý theo tính cách ở chân mỗi trang.", "1B": "[1. VAI TRÒ]\nBạn là người thiết kế giao diện trình chiếu 16:9 (1920x1080) phục vụ buổi trò chuyện 1-1 trên iPad và máy tính.\n\n[2. NHIỆM VỤ]\nChuyển toàn bộ dàn ý 6 trang bên dưới thành bộ slide 16:9 hoàn chỉnh, đồng nhất một màu nền sáng từ trang 1 đến trang 6.\n\n[3. THÔNG TIN ĐIỀN VÀO]\n- Bảng màu cố định: {{BẢNG_MÀU}} (không đổi sang nền đen ở bất kỳ trang nào, không dùng chữ trắng trên nền cam nhạt).\n- Nội dung 6 trang đã duyệt:\n{{DÀN_Ý_6_TRANG}}\n\n[4. CÁC BƯỚC THỰC HIỆN]\n- Bước 1: Khóa khung từng trang ở đúng tỷ lệ 16:9 (1920x1080), chừa lề thoáng, không để chữ hay khung bị tràn mép.\n- Bước 2: Mỗi trang giữ đúng 4 tầng từ trên xuống dưới:\n  + Tầng 1: Thanh hành trình 4 chặng và số trang ở góc phải.\n  + Tầng 2: Dòng nhãn nhỏ + Tiêu đề lớn (54–60px) + 1 câu dẫn ngắn (28–30px).\n  + Tầng 3: Nội dung chính trình bày đúng kiểu của từng trang (Trang 1: 2 cột mở chuyện; Trang 2: 2 cột đối chiếu; Trang 3: 3 điểm tựa; Trang 4: Bảng so sánh A/B; Trang 5: Danh thiếp bên trái + 3 cam kết bên phải; Trang 6: 3 bước ngang).\n  + Tầng 4: Thanh gợi ý khi trình bày ở chân trang.\n- Bước 3: Chỉ đưa lời nói với người nghe lên slide; tuyệt đối không đưa ghi chú kiểm tra, mã màu hay tên bố cục lên mặt slide.\n\n[5. ĐỊNH DẠNG KẾT QUẢ & TỰ KIỂM TRA]\n- Xuất trọn bộ 6 trang slide 16:9.\n- Tự kiểm tra trước khi hoàn tất: (1) Đúng tỷ lệ 16:9, không tràn chữ; (2) Cùng một nền sáng #FFFDF9 xuyên suốt 6 trang; (3) Đủ 6 kiểu trình bày, có bảng ở trang 4 và danh thiếp ở trang 5; (4) Chữ nội dung lớn (≥ 28px), đọc rõ từ khoảng cách 1.5 mét.", "2": "[1. VAI TRÒ]\nBạn là người hướng dẫn giao tiếp theo phương pháp quan sát 2 trục tính cách (DISC) của thầy Lê Minh Tuấn.\n\n[2. NHIỆM VỤ]\nDựa vào thông tin quan sát từ trang Facebook cá nhân (hoặc tin nhắn trước đó) để xác định nhóm tính cách của người sắp gặp và gợi ý cách mở lời tự nhiên.\n\n[3. THÔNG TIN ĐIỀN VÀO]\n- Mục tiêu buổi gặp: {{MỤC_TIÊU}}\n- Hồ sơ cơ bản & mối quan hệ: {{HỒ_SƠ}}\n- Ảnh đại diện & ảnh bìa Facebook: {{ẢNH_FACEBOOK}}\n- Nội dung 2–3 bài đăng hoặc tin nhắn gần nhất: {{BÀI_ĐĂNG_GẦN_NHẤT}}\n\n[4. CÁC BƯỚC THỰC HIỆN]\n- Bước 1 (Quan sát 2 trục kèm bằng chứng):\n  + Trục 1 — Nhịp độ: Nhanh, chủ động (nhóm D, I) hay Điềm tĩnh, từ tốn (nhóm S, C)? Chỉ rõ dấu hiệu từ ảnh và bài viết.\n  + Trục 2 — Mối quan tâm: Hướng về công việc, con số (nhóm D, C) hay Hướng về gia đình, con người (nhóm I, S)? Chỉ rõ dấu hiệu.\n- Bước 2 (Kết luận nhóm chính – phụ): Ghi rõ nhóm chính và nhóm phụ (ví dụ: C-S, S-I, D), mức độ chắc chắn (%) và 1 câu hỏi nhỏ trong 2 phút đầu gặp mặt để kiểm chứng lại. Nếu thông tin quá ít thì ghi rõ \"[Cần quan sát thêm]\" chứ không đoán mò.\n- Bước 3 (Cách tiếp cận và mở slide):\n  + Gợi ý dừng lâu ở trang slide nào trong bộ 6 trang (Người quyết đoán D: trang 4 bảng so sánh; Người vui vẻ I: trang 1 & 3; Người điềm đạm S: trang 2 & 5; Người cẩn trọng C: trang 3 & 4).\n\n[5. ĐỊNH DẠNG KẾT QUẢ & TỰ KIỂM TRA]\nTrình bày rõ 4 phần:\n1. Hai trục tính cách, nhóm chính – phụ, mức chắc chắn (%) và 1 câu hỏi kiểm chứng.\n2. Ba câu mở lời tự nhiên, ấm áp tại bàn cafe.\n3. Trang slide cần dừng lâu khi trò chuyện.\n4. Hai điều tuyệt đối tránh làm với người này.", "3": "[1. VAI TRÒ]\nBạn là người cố vấn lập kế hoạch chăm sóc ứng viên và khách hàng theo 6 bước làm quen (1. Biết đến mình -> 2. Tìm hiểu -> 3. Ngồi cafe 1-1 -> 4. Cân nhắc -> 5. Bắt đầu -> 6. Giới thiệu thêm người).\n\n[2. NHIỆM VỤ]\nĐọc danh sách hồ sơ và lịch sử chăm sóc bên dưới để lập Kế hoạch tuần: chọn đúng người cần gặp cafe trực tiếp và người cần nhắn tin giữ ấm.\n\n[3. THÔNG TIN ĐIỀN VÀO]\n- Các cơ hội hợp tác & gói sản phẩm đang có: {{CƠ_HỘI_VÀ_SẢN_PHẨM}}\n- Thời gian dành ra trong tuần này: {{THỜI_GIAN_TUẦN_NÀY}}\n- Danh sách trích từ file Excel:\n{{DANH_SÁCH_TỪ_EXCEL}}\n\n[4. CÁC BƯỚC THỰC HIỆN]\n- Bước 1 (Chọn người gặp trực tiếp): Chỉ chọn những người đã ở Bước 3 hoặc Bước 4 (hoặc Bước 2 nhưng đã chủ động hẹn) để mời cafe tuần này. Những người mới ở Bước 1–2 chỉ nhắn tin làm ấm, tuyệt đối không vội gửi hợp đồng hay bảng minh họa dài.\n- Bước 2 (Trao đúng thứ họ cần): Khớp đúng mối lo của từng người với cơ hội làm thêm hoặc gói bảo vệ phù hợp (chép đúng con số từ dữ liệu đưa vào, không tự đổi số).\n- Bước 3 (Cách tiếp cận): Với mỗi người, ghi rõ tin nhắn hẹn/nhắc lịch, trang slide cần mở khi gặp, và tờ tóm tắt 1 trang để lại sau buổi gặp.\n\n[5. ĐỊNH DẠNG KẾT QUẢ & TỰ KIỂM TRA]\n1. Bảng các buổi gặp cafe trong tuần (4 cột): [Gặp ai, tính cách, bước hiện tại & lý do chọn] | [Trao cơ hội hay gói gì] | [Tiếp cận thế nào (Tin nhắn + Trang slide + Tờ 1 trang)] | [Thế nào là buổi gặp thành công].\n2. Danh sách những người nhắn tin giữ ấm trong tuần (kèm nội dung tin nhắn ngắn và lý do chưa mời ký ngay).", "4": "[1. VAI TRÒ]\nBạn là người hướng dẫn gỡ băn khoăn trong tuyển dụng và tư vấn bảo hiểm theo 5 bước của thầy Lê Minh Tuấn, giữ trọn sự chân thành và thiện cảm.\n\n[2. NHIỆM VỤ]\nTìm đúng nỗi sợ thật phía sau câu từ chối bên dưới và viết lời đáp 5 bước tự nhiên, đúng xưng hô, không tranh cãi.\n\n[3. THÔNG TIN ĐIỀN VÀO]\n- Việc đang làm: {{VIỆC_ĐANG_LÀM}}\n- Đang ở bước thứ mấy: {{BƯỚC_HIỆN_TẠI}}\n- Nhóm tính cách: {{NHÓM_TÍNH_CÁCH}}\n- Nguyên văn câu từ chối vừa nghe: \"{{CÂU_TỪ_CHỐI}}\"\n- Hoàn cảnh của người nói: {{HOÀN_CẢNH}}\n\n[4. CÁC BƯỚC THỰC HIỆN]\n- Bước 1 (Đọc vị nỗi sợ thật): Giải thích vì sao một người thuộc {{NHÓM_TÍNH_CÁCH}} ở {{BƯỚC_HIỆN_TẠI}} lại nói câu đó (họ sợ mất uy tín, sợ bị ép chỉ tiêu, sợ mất thời gian của con, hay ngại tự quyết một mình?).\n- Bước 2 (Lắng nghe & đồng cảm): Viết 1 câu đồng cảm nhẹ nhàng, tuyệt đối không phản bác hay dạy khôn.\n- Bước 3 (Hỏi để tìm đúng nỗi lo thật): Đặt 1 câu hỏi mở nhẹ nhàng để họ nói ra băn khoăn lớn nhất.\n- Bước 4 (Kể chuyện tương đồng & trao công cụ): Nhắc một ví dụ gần gũi và chỉ rõ trang slide hoặc tờ tóm tắt 1 trang giúp họ yên tâm (không tự bịa số liệu ngoài thông tin đã cho).\n- Bước 5 (Xin một bước thử nhỏ): Chỉ xin một cuộc hẹn ngắn 15–20 phút hoặc gửi tờ tóm tắt 1 trang xem trước, không ép ký ngay.\n\n[5. ĐỊNH DẠNG KẾT QUẢ & TỰ KIỂM TRA]\nTrình bày rõ 4 mục:\n1. Chẩn đoán nỗi sợ thật phía sau.\n2. Kịch bản 5 bước (kèm nguyên văn câu nói ở từng bước).\n3. Tin nhắn hỏi thăm gửi lại sau 24 giờ.\n4. Một dòng ghi chú ngắn để lưu vào trang \"Lịch sử chăm sóc\" trong file Excel.", "5": "[1. VAI TRÒ]\nBạn là người hỗ trợ trưởng nhóm đúc kết kinh nghiệm thực tế thành công thức ngắn gọn và lịch làm việc từng ngày cho người mới bắt đầu.\n\n[2. NHIỆM VỤ]\nĐọc lịch sử các ca chăm sóc thành công bên dưới để rút ra bộ công thức bỏ túi và bảng lịch 7 ngày đầu cho người mới.\n\n[3. THÔNG TIN ĐIỀN VÀO]\n- Nội dung muốn đóng gói: {{MUỐN_ĐÓNG_GÓI}}\n- Người sẽ dùng tài liệu này: {{NGƯỜI_ÁP_DỤNG}}\n- Lịch sử các ca đã làm trong file Excel:\n{{LỊCH_SỬ_CA_THẬT}}\n\n[4. CÁC BƯỚC THỰC HIỆN]\n- Bước 1: Tìm điểm chung giúp các ca trong dữ liệu thành công (đã đồng cảm điều gì, mở trang slide nào, gửi tài liệu gì?).\n- Bước 2 (Rút ra 3 công thức bỏ túi): Viết theo cấu trúc: \"Khi gặp [tình huống/nỗi lo] -> Làm [các bước cụ thể] -> Kết quả [điều đạt được]\", kèm 1 câu thoại mẫu cho mỗi công thức.\n- Bước 3 (Lập bảng 7 ngày đầu): Chia đúng 7 ngày đầu, mỗi ngày một việc nhỏ làm dưới 15 phút để người mới có buổi hẹn đầu tiên mà không thấy áp lực. Chỉ dùng đúng con số có trong dữ liệu đưa vào.\n\n[5. ĐỊNH DẠNG KẾT QUẢ & TỰ KIỂM TRA]\n- Phần A: 3 công thức bỏ túi (gồm cả mời hợp tác và tư vấn bảo vệ), mỗi công thức kèm 1 câu thoại mẫu.\n- Phần B: Bảng 7 ngày đầu gồm 5 cột: [Ngày] | [Việc cần làm (≤ 15 phút)] | [Công cụ dùng] | [Xong khi nào] | [Lỗi cần tránh].\n- Phần C: Kiểm chứng ngắn gọn rằng mọi việc đều dưới 15 phút/ngày và bám sát dữ liệu thực tế."};
+const HASH_MAP = {"#p0": 0, "#0": 0, "#2": 1, "#p2": 1, "#P2": 1, "#3": 2, "#p3": 2, "#4": 3, "#p4": 3, "#5": 4, "#p5": 4};
+const slides=[...document.querySelectorAll('.slide')],count=document.getElementById('count'),stage=document.getElementById('stage'),vp=document.getElementById('viewport'),pick=document.getElementById('pick');
+let idx=0;
+function fit(){const s=Math.min((vp.clientWidth-24)/1920,(vp.clientHeight-20)/1080);stage.style.transform=`translate(-50%,-50%) scale(${Math.max(.2,s)})`}
+addEventListener('resize',fit);fit();
+slides.forEach((s,i)=>{const o=document.createElement('option');o.value=i;o.textContent=`Trang ${String(i+1).padStart(2,'0')} · `+s.querySelector('h1').textContent;pick.appendChild(o)});
+function show(n){
+  idx=(n+slides.length)%slides.length;
+  slides.forEach((s,i)=>s.classList.toggle('active',i===idx));
+  count.textContent=String(idx+1).padStart(2,'0')+' / '+String(slides.length).padStart(2,'0');
+  pick.value=idx;
+}
+function next(){show(idx+1)}function prev(){show(idx-1)}
+function copyPrompt(key){
+  const txt=RAW_PROMPTS[key]||'';
+  if(navigator.clipboard) navigator.clipboard.writeText(txt);
+  const btn=document.getElementById('cbtn-'+key);
+  if(btn){const old=btn.textContent;btn.textContent='Đã chép vào bộ nhớ tạm!';setTimeout(()=>{btn.textContent=old},1500)}
+}
+function syncHash(){
+  const h=location.hash;
+  if(h && HASH_MAP[h]!==undefined) show(HASH_MAP[h]);
+}
+addEventListener('hashchange',syncHash);
+addEventListener('keydown',e=>{if(['ArrowRight',' ','PageDown'].includes(e.key)){e.preventDefault();next()}if(['ArrowLeft','PageUp'].includes(e.key)){e.preventDefault();prev()}});
+show(0);syncHash();
+</script>
+</body></html>

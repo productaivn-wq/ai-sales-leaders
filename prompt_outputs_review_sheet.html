@@ -1,0 +1,171 @@
+<!DOCTYPE html><html lang="vi"><head><meta charset="utf-8"/>
+<title>Kết quả chạy thử 5 câu lệnh · Buổi 2</title>
+<link href="https://fonts.googleapis.com/css2?family=Be+Vietnam+Pro:ital,wght@0,400;0,500;0,600;0,700;0,800;1,400&display=swap" rel="stylesheet"/>
+<style>
+:root{--bg:#FFFDF9;--card:#fff;--line:#E7E5E4;--ink:#1C1917;--ink2:#57534E;--orange:#E85D04;--oink:#C2410C;--slate:#334155;--tint:#FFF4EA;--bad:#B91C1C;--good:#15803D}
+*{box-sizing:border-box;margin:0;padding:0}
+body{background:#E7E5E4;font-family:'Be Vietnam Pro',system-ui,sans-serif;color:var(--ink);-webkit-font-smoothing:antialiased}
+.board{width:1920px;height:1080px;margin:0 auto 40px;background:var(--bg);padding:44px 72px 44px;overflow:hidden}
+.top{display:flex;align-items:baseline;gap:20px;padding-bottom:18px;border-bottom:1px solid var(--line)}
+.num{font-size:18px;font-weight:700;color:var(--oink);letter-spacing:.06em;text-transform:uppercase;white-space:nowrap}
+.top h1{font-size:38px;line-height:1.15;font-weight:800;letter-spacing:-.015em}
+.top p{margin-left:auto;font-size:18px;color:var(--ink2);max-width:540px;text-align:right;line-height:1.38}
+.cols{display:grid;grid-template-columns:5fr 8fr 5fr;gap:32px;margin-top:22px;align-items:start}
+.colh{display:flex;align-items:center;gap:12px;margin-bottom:12px}
+.colh b{width:32px;height:32px;border-radius:50%;background:var(--slate);color:#fff;font-size:17px;display:grid;place-items:center;flex:none}
+.colh span{font-size:19px;font-weight:700}
+.box{background:var(--card);border:1px solid var(--line);border-radius:14px;padding:20px 24px;display:flex;flex-direction:column;gap:12px}
+.in .row{font-size:17px;line-height:1.4;color:var(--ink2)}
+.in .row b{display:block;color:var(--ink);font-size:15px;letter-spacing:.04em;text-transform:uppercase;margin-bottom:2px}
+.in .quote{font-style:italic;color:var(--ink)}
+.in .sample{font-size:14px;color:var(--ink2);border:1px dashed #A8A29E;border-radius:6px;padding:2px 8px;display:inline-block;margin-top:4px}
+.out{box-shadow:0 1px 2px rgba(28,25,23,.04),0 12px 32px -16px rgba(28,25,23,.14)}
+.out h3{font-size:15px;font-weight:700;letter-spacing:.06em;text-transform:uppercase;color:var(--oink)}
+.out p,.out li{font-size:17.5px;line-height:1.42;color:var(--ink2)}
+.out b{color:var(--ink)}
+.out ol,.out ul{padding-left:20px;display:flex;flex-direction:column;gap:5px;margin-top:4px}
+.part{display:flex;flex-direction:column;gap:4px}
+.say{border-left:3px solid var(--orange);padding:2px 0 2px 12px;font-style:italic;color:var(--ink)!important}
+table{width:100%;border-collapse:collapse;table-layout:fixed;margin-top:4px}
+th{font-size:13.5px;font-weight:700;letter-spacing:.04em;text-transform:uppercase;color:var(--ink2);text-align:left;padding:0 8px 8px 0;border-bottom:1px solid var(--line)}
+td{font-size:16px;line-height:1.35;color:var(--ink2);padding:8px 8px 8px 0;border-bottom:1px solid var(--line);vertical-align:top}
+td b{display:block;color:var(--ink)}
+.rv h4{font-size:15px;font-weight:700;letter-spacing:.06em;text-transform:uppercase;margin-bottom:6px}
+.rv .bad h4{color:var(--bad)} .rv .fix h4{color:var(--ink)} .rv .good h4{color:var(--good)}
+.rv ul{list-style:none;display:flex;flex-direction:column;gap:6px}
+.rv li{font-size:16.5px;line-height:1.38;color:var(--ink2);padding-left:16px;position:relative}
+.rv li::before{content:"";position:absolute;left:0;top:.55em;width:6px;height:6px;border-radius:50%;background:#A8A29E}
+.rv .bad li::before{background:var(--bad)} .rv .good li::before{background:var(--good)}
+.rv section+section{border-top:1px solid var(--line);padding-top:12px}
+.thumbs{display:grid;grid-template-columns:repeat(3,1fr);gap:14px}
+.thumbs img{width:100%;display:block;border:1px solid var(--line);border-radius:6px}
+.thumbs span{display:block;font-size:14px;color:var(--ink2);margin-top:4px}
+/* cover */
+.cover h1{font-size:52px;line-height:1.15;font-weight:800;letter-spacing:-.02em;max-width:1400px}
+.cover .lead{font-size:24px;color:var(--ink2);margin-top:14px;max-width:1300px;line-height:1.45}
+.grid4{display:grid;grid-template-columns:1fr 1fr;gap:28px;margin-top:40px}
+.grid4 .box h2{font-size:26px;font-weight:700}
+.grid4 .box p,.grid4 .box li{font-size:20px;line-height:1.5;color:var(--ink2)}
+.grid4 ul{padding-left:22px;display:flex;flex-direction:column;gap:6px}
+.grid4 b{color:var(--ink)}
+</style></head><body>
+<section class="board cover" id="p0">
+ <div class="num">Buổi 2 · Kết quả chạy thử</div>
+ <h1 style="margin-top:14px">5 câu lệnh, chạy thử trên dữ liệu mẫu của nhóm</h1>
+ <p class="lead">Dữ liệu thử lấy từ file Excel mẫu Buổi 2: 4 người muốn mời hợp tác và 3 khách hàng. Mỗi trang sau là một câu lệnh, đọc từ trái sang phải: điền gì vào → AI trả về gì → lần trước sai ở đâu và đã sửa câu lệnh thế nào.</p>
+ <div class="grid4">
+  <div class="box"><h2>Câu lệnh là gì?</h2><p>Một đoạn văn mẫu có sẵn chỗ trống. Bạn điền thông tin người mình sắp gặp vào chỗ trống, dán vào ChatGPT hoặc Claude, rồi nhận kết quả.</p></div>
+  <div class="box"><h2>4 nhóm tính cách (DISC)</h2><ul>
+   <li><b>D</b> — quyết đoán, nói nhanh, cần kết quả.</li><li><b>I</b> — vui vẻ, thích giao lưu.</li>
+   <li><b>S</b> — điềm đạm, trọng tình cảm và gia đình.</li><li><b>C</b> — cẩn trọng, cần số liệu rõ ràng.</li></ul>
+   <p>Một người thường có 1 nhóm chính và 1 nhóm phụ, ví dụ <b>C-S</b>: cẩn trọng là chính, điềm đạm là phụ.</p></div>
+  <div class="box"><h2>6 bước làm quen (hành trình)</h2><ul>
+   <li><b>1</b> Biết đến mình · <b>2</b> Tìm hiểu, nhắn tin qua lại · <b>3</b> Ngồi cafe 1-1</li>
+   <li><b>4</b> Cân nhắc, còn băn khoăn · <b>5</b> Đồng ý, bắt đầu · <b>6</b> Giới thiệu thêm người</li></ul>
+   <p>Biết người ta đang ở bước nào thì chỉ cần đưa họ lên bước kế tiếp, không vội.</p></div>
+  <div class="box"><h2>5 câu lệnh</h2><ul>
+   <li><b>1A + 1B</b> — làm bộ slide 6 trang mang đi gặp cafe.</li><li><b>2</b> — soi Facebook 30 giây để đoán tính cách.</li>
+   <li><b>3</b> — lập kế hoạch gặp ai, trao gì, tiếp cận thế nào trong tuần.</li><li><b>4</b> — trả lời khi bị từ chối.</li>
+   <li><b>5</b> — đúc kết cách làm để dạy người mới.</li></ul></div>
+ </div>
+</section>
+<section class="board" id="p1">
+ <div class="top"><span class="num">Câu lệnh 1A + 1B</span><h1>Làm bộ slide 6 trang mang đi gặp cafe</h1><p>1A lập dàn ý, 1B dựng thành slide. Chạy cho chị Lan (trang 1–6) và anh Long (trang 7–12).</p></div>
+ <div class="cols">
+  <div><div class="colh"><b>1</b><span>Bạn điền vào câu lệnh</span></div><div class="box in"><div class="row"><b>Mục tiêu buổi gặp</b>Chia sẻ cơ hội hợp tác cho người muốn có sự nghiệp thứ hai</div><div class="row"><b>Người sẽ gặp</b>Chị Lan, 34 tuổi, kế toán trưởng, nhóm C-S. Lương chạm trần, sợ chèo kéo người quen</div><div class="row"><b>Câu chuyện mở đầu</b>Từ bảng lương văn phòng chạm trần đến sự nghiệp thứ hai đĩnh đạc, nhân văn</div><div class="row"><b>Thông tin chính</b>1–2 giờ mỗi tối · bộ công cụ AI · Hanwha Life hậu thuẫn 4.891 tỷ · hoa hồng và thăng tiến (8–15 triệu hoặc 25–50+ triệu) · 3 bước khởi động 7 ngày</div><div class="row"><b>Người trình bày</b>Tên, chức danh trưởng nhóm, số điện thoại — chỉ ghi 1 lần ở trang 5</div></div></div>
+  <div><div class="colh"><b>2</b><span>AI trả về</span></div><div class="box out"><h3>Bộ slide 6 trang (gặp chị Lan · xem thêm bộ gặp anh Long ở trang 7–12 file mẫu)</h3><div class="thumbs"><div><img src="review_assets/lan_slide_01.png" alt="Trang 1"/><span>Trang 1 · Câu chuyện mở đầu</span></div><div><img src="review_assets/lan_slide_02.png" alt="Trang 2"/><span>Trang 2 · Kiểu cũ và cách làm mới</span></div><div><img src="review_assets/lan_slide_03.png" alt="Trang 3"/><span>Trang 3 · Ba điểm tựa</span></div><div><img src="review_assets/lan_slide_04.png" alt="Trang 4"/><span>Trang 4 · Hai lộ trình</span></div><div><img src="review_assets/lan_slide_05.png" alt="Trang 5"/><span>Trang 5 · Người đồng hành</span></div><div><img src="review_assets/lan_slide_06.png" alt="Trang 6"/><span>Trang 6 · 7 ngày đầu</span></div></div><div class="part"><h3>Bảng tự kiểm tra 5 tiêu chí (cuối câu lệnh 1A)</h3><p><b>1.</b> Trang 1–2 mở lời nhẹ nhàng kiểu Việt: <b>Đạt</b> · <b>2.</b> 6 trang đủ 6 kiểu trình bày: <b>Đạt</b> · <b>3.</b> Mỗi ý ≤ 22 chữ, tiêu đề ≤ 12 chữ: <b>Đạt</b> · <b>4.</b> Số điện thoại chỉ ghi 1 lần (trang 5): <b>Đạt</b> · <b>5.</b> Có gợi ý theo tính cách ở chân mỗi trang: <b>Đạt</b>.</p></div></div></div>
+  <div><div class="colh"><b>3</b><span>Lần trước sai gì, đã sửa ra sao</span></div>
+   <div class="box rv"><section class="bad"><h4>Lần chạy trước bị lỗi</h4><ul><li>6 trang cùng một kiểu 3 ô, nhìn như nhau.</li><li>Trang đầu nền tối, trang giữa nền sáng — như 2 bộ ghép lại.</li><li>Chữ trắng trên nền cam nhạt, chiếu lên không đọc được.</li><li>AI tự thêm số liệu không có trong thông tin đưa vào (“hơn 50 cộng sự”, “Top 7”, “thành lập 1946”).</li><li>Câu ghi chú nội bộ (“đã kiểm chứng… bên trái”) hiện lên slide.</li></ul></section>
+   <section class="fix"><h4>Đã thêm vào câu lệnh</h4><ul><li>Ghi sẵn kiểu trình bày cho từng trang 1–6.</li><li>Một màu nền sáng cho cả bộ, một màu nhấn cam.</li><li>Chữ trên nền màu phải đậm, đọc rõ.</li><li>Chỉ dùng số liệu có trong thông tin đưa vào; thiếu thì để trống cho người dùng điền.</li><li>Không đưa ghi chú nội bộ hay chỉ dẫn thiết kế lên slide.</li></ul></section>
+   <section class="good"><h4>Chạy lại thì thấy</h4><ul><li>6 trang, 6 kiểu trình bày, cùng một màu nền.</li><li>Mọi con số trên slide đều có trong thông tin đưa vào.</li><li>Tiêu đề không quá 12 chữ, số điện thoại chỉ xuất hiện 1 lần.</li><li>Đã mở từng trang ra xem, không có chữ bị tràn.</li></ul></section></div></div>
+ </div>
+</section>
+<section class="board" id="p2">
+ <div class="top"><span class="num">Câu lệnh 2</span><h1>Soi Facebook 30 giây để đoán tính cách</h1><p>Đoán người mình sắp gặp thuộc nhóm nào, rồi chọn cách mở lời và trang slide phù hợp.</p></div>
+ <div class="cols">
+  <div><div class="colh"><b>1</b><span>Bạn điền vào câu lệnh</span></div><div class="box in"><div class="row"><b>Mục tiêu</b>Mời hợp tác</div><div class="row"><b>Hồ sơ</b>Chị Lan, 34 tuổi, kế toán trưởng, đồng nghiệp cũ, 2 con nhỏ</div><div class="row"><b>Ảnh Facebook</b>Ảnh đại diện mặc vest công sở; ảnh bìa hai con ở công viên.<br/><span class="sample">mô tả mẫu để minh họa</span></div><div class="row"><b>Bài đăng / tin nhắn gần nhất</b><span class="quote">“Chị thấy em viết bài làm thêm buổi tối hay quá, nhưng chị làm kế toán xưa nay chỉ quen con số, sợ không có khiếu ăn nói để đi tư vấn.”</span> (tin nhắn 24/10, lấy từ file Excel)<br/>Chia sẻ bài hướng dẫn quyết toán thuế, không bình luận.<br/><span class="sample">mô tả mẫu để minh họa</span></div></div></div>
+  <div><div class="colh"><b>2</b><span>AI trả về</span></div><div class="box out">
+<div class="part"><h3>1. Hai trục tính cách</h3>
+ <p><b>Nhịp độ: điềm tĩnh, từ tốn.</b> Bằng chứng: ít đăng bài, câu ngắn, gần như không dùng biểu tượng cảm xúc; tin nhắn mở đầu bằng một lời khen nhẹ nhàng.</p>
+ <p><b>Quan tâm: số liệu và chuẩn mực, xen gia đình.</b> Bằng chứng: chia sẻ bài quyết toán thuế; tự nói “chỉ quen con số”; ảnh bìa là hai con.</p>
+ <p>→ <b>Nhóm C là chính, S là phụ (C-S)</b>. Mức chắc chắn: khoảng 70%.</p>
+ <p class="say">Câu hỏi kiểm chứng trong 2 phút đầu: “Cuối năm quyết toán chắc chị bận lắm, chị thường sắp xếp việc nhà với việc cơ quan thế nào ạ?”</p></div>
+<div class="part"><h3>2. Ba câu mở lời</h3><ol>
+ <li>“Em cảm ơn chị đã nhận lời, em biết cuối năm là lúc kế toán bận nhất.”</li>
+ <li>“Hôm trước chị nhắn sợ không có khiếu ăn nói, em nhớ mãi — nên hôm nay em chỉ mang 2 trang để chị tự xem.”</li>
+ <li>“Chị cứ hỏi kỹ phần cơ chế, em có văn bản đầy đủ.”</li></ol></div>
+<div class="part"><h3>3. Mở slide nào</h3><p>Người cẩn trọng (C): dừng lâu ở trang 3 (điểm tựa) và trang 4 (bảng thu nhập). Người điềm đạm (S): trang 2 (không chèo kéo) và trang 5 (trưởng nhóm đi cùng).</p></div>
+<div class="part"><h3>4. Hai điều không được làm</h3><ol><li>Không hứa “thu nhập trăm triệu”, “làm giàu nhanh”.</li><li>Không giục quyết định hay xin danh sách người quen ngay buổi đầu.</li></ol></div></div></div>
+  <div><div class="colh"><b>3</b><span>Lần trước sai gì, đã sửa ra sao</span></div>
+   <div class="box rv"><section class="bad"><h4>Lần chạy trước bị lỗi</h4><ul><li>Phán “nhóm C” mà không nêu lý do.</li><li>Không chỉ ra bằng chứng nào từ Facebook.</li><li>Chỉ có cách bán hàng, thiếu cách mời hợp tác.</li></ul></section>
+   <section class="fix"><h4>Đã thêm vào câu lệnh</h4><ul><li>Bắt buộc chấm theo 2 trục của thầy Lê Minh Tuấn, mỗi trục kèm bằng chứng.</li><li>Ghi mức chắc chắn và 1 câu hỏi để kiểm chứng khi gặp.</li><li>Tách cách tiếp cận cho mời hợp tác và cho bán hàng.</li><li>Thiếu thông tin thì ghi “cần quan sát thêm”, không đoán.</li></ul></section>
+   <section class="good"><h4>Chạy lại thì thấy</h4><ul><li>Mỗi kết luận đều chỉ về một bằng chứng cụ thể.</li><li>Có đủ 4 phần câu lệnh yêu cầu: chấm điểm, 3 câu mở lời, slide cần mở, 2 điều cấm.</li></ul></section></div></div>
+ </div>
+</section>
+<section class="board" id="p3">
+ <div class="top"><span class="num">Câu lệnh 3</span><h1>Kế hoạch tuần: gặp ai, trao gì, tiếp cận thế nào</h1><p>Đầu ra số 1 của buổi học. Dán danh sách người quen vào, AI chọn ra ai cần gặp tuần này.</p></div>
+ <div class="cols">
+  <div><div class="colh"><b>1</b><span>Bạn điền vào câu lệnh</span></div><div class="box in"><div class="row"><b>Cơ hội và sản phẩm đang có</b>Cộng tác viên 1–2 giờ/tối · lộ trình đại lý và quản lý · gói bảo vệ trụ cột và quỹ học vấn · thẻ sức khỏe</div><div class="row"><b>Thời gian tuần này</b>3 buổi cafe (2 mời hợp tác, 1 bán hàng) và nhắn tin 5 người</div><div class="row"><b>7 người dán từ file Excel (trang “Danh sách hồ sơ” và “Lịch sử chăm sóc”)</b>Lan · kế toán trưởng · C-S · bước 3<br/>Yến · giáo viên · S-I · bước 2<br/>Huy · trưởng nhóm môi giới nhà đất · D · bước 3<br/>Mai · chủ tiệm spa · I · bước 2<br/>Long · chủ xưởng in · D · bước 4, đã chọn phương án B<br/>Thu Hà · bán hàng online · S · bước 4, chờ hỏi chồng<br/>Khánh · khách cũ vừa được bồi thường · I · bước 6</div></div></div>
+  <div><div class="colh"><b>2</b><span>AI trả về</span></div><div class="box out">
+<div class="part"><h3>3 buổi cafe tuần này (đủ 6 thông tin: ai, tọa độ, lý do, trao gì, tin nhắn + slide + tờ 1 trang, thước đo)</h3>
+<table><thead><tr><th style="width:22%">Gặp ai, vì sao</th><th style="width:21%">Trao gì</th><th>Tiếp cận (tin nhắn · slide · tài liệu 1 trang)</th><th style="width:19%">Thế nào là thành công</th></tr></thead><tbody>
+<tr><td><b>1. Chị Lan (UV-001)</b>Mời hợp tác · C-S · bước 3 · hẹn sáng thứ 4</td><td>Nghề tay trái 1–2 giờ/tối, thu nhập 8–15 triệu</td><td>Nhắn xác nhận hẹn sáng thứ 4 ở Cofeli Quán Sứ · Mở trang 2 và 5 · Để lại tờ tóm tắt cơ chế 1 trang</td><td>Chị đồng ý thử 7 ngày đầu</td></tr>
+<tr><td><b>2. Anh Huy (UV-003)</b>Mời hợp tác · D · bước 3 · hẹn sáng thứ 5</td><td>Lộ trình lên quản lý, 25–50+ triệu/tháng</td><td>Nhắn gửi trước khung giờ sáng thứ 5 · Mở thẳng trang 4 (bảng lộ trình) · Để lại bảng cơ chế quản lý 1 trang</td><td>Anh hẹn buổi sau cùng 2 người trong nhóm</td></tr>
+<tr><td><b>3. Anh Long (KH-005)</b>Khách hàng · D · bước 4, đã chọn phương án B</td><td>Gói bảo vệ trụ cột và quỹ học vấn (45 triệu/năm)</td><td>Nhắn hẹn 12 phút tại sảnh xưởng thứ 5 · Mở trang 10 (phương án B) · Để lại bản tóm tắt quyền lợi 1 trang</td><td>Hoàn tất hồ sơ phương án B</td></tr>
+</tbody></table></div>
+<div class="part"><h3>Nhắn tin chăm sóc 4 người (chưa đốt cháy giai đoạn)</h3><ul>
+<li><b>Chị Yến (UV-002</b>, S-I, bước 2): nhắn khen lớp học, nhắc lịch cafe 15 phút chiều thứ 7 chị đã nhận lời (mở trang 4 & 6).</li>
+<li><b>Chị Mai (UV-004</b>, I, bước 2): khen phong cách, gửi 1 bài viết mẫu do AI viết sẵn để gợi mở.</li>
+<li><b>Chị Thu Hà (KH-006</b>, S, bước 4, chờ hỏi chồng): hỏi thăm nhẹ, đợi chị phản hồi sáng thứ 6 sau khi xem tờ tóm tắt 1 trang.</li>
+<li><b>Anh Khánh (KH-007</b>, I, bước 6): chúc mừng bé khỏe, xác nhận cafe sáng thứ 6 hướng dẫn làm cộng tác viên (trang 3 & 5).</li></ul>
+<p>Chị Yến, chị Mai mới ở bước 2 nên chỉ nhắn tin làm ấm, chưa gửi hợp đồng đại lý hay bảng minh họa dài.</p></div></div></div>
+  <div><div class="colh"><b>3</b><span>Lần trước sai gì, đã sửa ra sao</span></div>
+   <div class="box rv"><section class="bad"><h4>Lần chạy trước bị lỗi</h4><ul><li>Mời ký hoặc mời đi học khi người ta mới ở bước tìm hiểu.</li><li>Câu trả lời chung chung, ai cũng dùng được.</li><li>Ghép nhầm tên và mã hồ sơ (ghi KH-005 là chị Thu Hà — thật ra là anh Long).</li><li>Tin nhắn mẫu đảo xưng hô chị/em.</li></ul></section>
+   <section class="fix"><h4>Đã thêm vào câu lệnh</h4><ul><li>Chỉ mời gặp người đã ở bước 3–4; người ở bước 1–2 chỉ nhắn tin.</li><li>Mỗi người một việc cụ thể trong tuần và một cách đo thành công.</li><li>Chép đúng tên, xưng hô và lịch hẹn từ dữ liệu, không tự thêm.</li></ul></section>
+   <section class="good"><h4>Chạy lại thì thấy</h4><ul><li>Đúng 3 buổi cafe và 4 tin nhắn, vừa với thời gian đã cho.</li><li>Lịch hẹn khớp với lịch sử chăm sóc trong file Excel.</li></ul></section></div></div>
+ </div>
+</section>
+<section class="board" id="p4">
+ <div class="top"><span class="num">Câu lệnh 4</span><h1>Trả lời khi bị từ chối — 5 bước</h1><p>Tìm nỗi sợ thật phía sau lời từ chối, rồi trả lời mà vẫn giữ được thiện cảm.</p></div>
+ <div class="cols">
+  <div><div class="colh"><b>1</b><span>Bạn điền vào câu lệnh</span></div><div class="box in"><div class="row"><b>Việc đang làm</b>Mời hợp tác</div><div class="row"><b>Đang ở bước</b>Bước 2 — mới nhắn tin qua lại</div><div class="row"><b>Nhóm tính cách</b>C-S (cẩn trọng, điềm đạm)</div><div class="row"><b>Câu từ chối, nguyên văn</b><span class="quote">“Chị thấy em viết bài làm thêm buổi tối hay quá, nhưng chị làm kế toán xưa nay chỉ quen con số, sợ không có khiếu ăn nói để đi tư vấn.”</span></div><div class="row"><b>Hoàn cảnh</b>Kế toán trưởng 34 tuổi, 2 con nhỏ, lương 15 triệu đã chạm trần</div></div></div>
+  <div><div class="colh"><b>2</b><span>AI trả về</span></div><div class="box out">
+<div class="part"><h3>1. Chẩn đoán nỗi sợ thật phía sau (Bước 2 × Nhóm C-S)</h3><p>Chị Lan làm kế toán nên coi trọng sự chính xác, trung thực; chị sợ đi tư vấn phải ăn nói khéo léo, sáo rỗng hoặc chèo kéo người quen làm mất uy tín, và sợ mình làm không được.</p></div>
+<div class="part"><h3>2. Kịch bản đối thoại 5 bước của thầy Lê Minh Tuấn</h3><ol>
+<li><b>Đọc vị nỗi sợ:</b> Người cẩn trọng (C-S) ở bước 2 sợ mất uy tín hơn sợ vất vả — không tranh cãi “ai cũng học nói được”.</li>
+<li><b>Lắng nghe & đồng cảm:</b> <span class="say">“Dạ em hiểu. Hồi mới bắt đầu em cũng lo đúng như chị.”</span></li>
+<li><b>Hỏi để tìm đúng nỗi lo thật:</b> <span class="say">“Nếu có sẵn AI viết bài và em đi cùng 2 buổi đầu, thì ngoài chuyện ăn nói chị còn ngại điều gì nữa không ạ?”</span></li>
+<li><b>Kể chuyện tương đồng & trao công cụ:</b> <span class="say">“Khách mua bảo hiểm sợ nhất người khéo miệng chèo kéo, họ cần sự chỉn chu số liệu như chị.”</span> Mở trang 2 (không chèo kéo) và trang 5 (trưởng nhóm đi cùng 2 buổi đầu).</li>
+<li><b>Xin một bước thử nhỏ:</b> <span class="say">“Sáng thứ 4 mình ngồi cafe 20 phút, chị chỉ xem quy trình, chưa cần quyết gì nhé?”</span></li></ol></div>
+<div class="part"><h3>3. Tin nhắn chăm sóc sau 24 giờ</h3><p class="say">“Chị Lan ơi, em gửi chị trang tóm tắt cách làm 1–2 giờ mỗi tối để chị xem trước. Sáng thứ 4 em đợi chị ở Cofeli Quán Sứ nhé!”</p></div>
+<div class="part"><h3>4. Dòng ghi chú lưu vào file Excel (trang “Lịch sử chăm sóc”)</h3><p>24/10 · UV-001 Chị Lan (C-S, bước 2) sợ không có khiếu ăn nói → đồng cảm, nhấn mạnh sự chỉn chu số liệu, hẹn cafe 20 phút sáng thứ 4 tại Cofeli Quán Sứ.</p></div></div></div>
+  <div><div class="colh"><b>3</b><span>Lần trước sai gì, đã sửa ra sao</span></div>
+   <div class="box rv"><section class="bad"><h4>Lần chạy trước bị lỗi</h4><ul><li>AI cãi lý (“ai cũng học ăn nói được”) khiến người cẩn trọng khép lại.</li><li>Bỏ mất bước hỏi để tìm đúng nỗi lo thật.</li><li>Chốt quá lớn: mời ký hoặc mời đi học ngay.</li><li>Thiếu tin nhắn sau 24 giờ và dòng ghi chú lưu file.</li></ul></section>
+   <section class="fix"><h4>Đã thêm vào câu lệnh</h4><ul><li>Đọc nỗi sợ trước rồi mới viết lời thoại.</li><li>Đủ 5 bước, bắt buộc có câu hỏi tìm nỗi lo thật.</li><li>Cấm phản bác.</li><li>Bước cuối chỉ xin một cuộc hẹn ngắn.</li><li>Luôn kèm tin nhắn sau 24 giờ và 1 dòng ghi chú.</li></ul></section>
+   <section class="good"><h4>Chạy lại thì thấy</h4><ul><li>Không còn câu phản bác nào.</li><li>Xưng hô đúng: chị Lan xưng “chị”, trưởng nhóm xưng “em”.</li><li>Lịch hẹn và quán cafe khớp với file Excel.</li></ul></section></div></div>
+ </div>
+</section>
+<section class="board" id="p5">
+ <div class="top"><span class="num">Câu lệnh 5</span><h1>Đúc kết cách làm để dạy người mới</h1><p>Đầu ra số 2 của buổi học. Biến kinh nghiệm của trưởng nhóm thành công thức và lịch 7 ngày.</p></div>
+ <div class="cols">
+  <div><div class="colh"><b>1</b><span>Bạn điền vào câu lệnh</span></div><div class="box in"><div class="row"><b>Muốn đóng gói</b>Quy trình 7 ngày đầu cho người mới, và cách gỡ nỗi sợ nghề khi mời hợp tác</div><div class="row"><b>Áp dụng cho</b>Người mới vào nhóm trong 7–30 ngày đầu, chưa có kinh nghiệm bán hàng</div><div class="row"><b>Lịch sử thành công dán từ file Excel</b>24/10 Lan: sợ không có khiếu ăn nói → nhận lời cafe thứ 4<br/>25/10 Yến: sợ thiếu thời gian, sợ bị ép chỉ tiêu → đồng ý cafe 15 phút thứ 7<br/>26/10 Huy: hỏi cơ chế quản lý → hẹn họp cùng 2 người<br/>27/10 Long: muốn xem ngay đóng bao nhiêu → chọn phương án B<br/>28/10 Thu Hà: muốn hỏi chồng → hẹn phản hồi thứ 6<br/>29/10 Khánh: vừa được bồi thường → muốn làm cộng tác viên</div></div></div>
+  <div><div class="colh"><b>2</b><span>AI trả về</span></div><div class="box out">
+<div class="part"><h3>A. Ba công thức bỏ túi (kèm câu thoại mẫu)</h3><ol>
+<li><b>Công thức 1 (C-S sợ ăn nói):</b> <b>Khi</b> ngại ăn nói → <b>làm</b>: đồng cảm, trao AI viết bài + slide, đi cùng 2 buổi đầu → <b>kết quả</b>: đồng ý cafe. <i>Thoại mẫu: “Khách cần sự chỉn chu số liệu của chị; 2 buổi đầu em đi cùng chị.”</i></li>
+<li><b>Công thức 2 (S/C sợ mất uy tín):</b> <b>Khi</b> sợ bị nghĩ đa cấp → <b>làm</b>: cam kết 3 không (không chèo kéo người thân, không gọi làm phiền, không văn mẫu) + mở trang 2 → <b>kết quả</b>: hết ngại. <i>Thoại mẫu: “Nhóm em không chèo kéo người thân; mình viết chuyện đời thực, ai cần tự hỏi.”</i></li>
+<li><b>Công thức 3 (S xin hỏi chồng):</b> <b>Khi</b> xin về hỏi chồng → <b>làm</b>: khen sự tôn trọng gia đình + trao bản 1 trang thay vì bảng 30 trang → <b>kết quả</b>: chốt giờ phản hồi. <i>Thoại mẫu: “Em gửi chị tờ 1 trang 3 quyền lợi của bé để anh đọc 1 phút là rõ ngay.”</i></li></ol></div>
+<div class="part"><h3>B. Bảng quy trình 7 ngày đầu cho người mới (mỗi việc ≤ 15 phút/ngày)</h3>
+<table><thead><tr><th style="width:10%">Ngày</th><th>Việc cần làm (≤ 15 phút)</th><th style="width:17%">Công cụ dùng</th><th style="width:21%">Xong khi</th><th style="width:22%">Lỗi cần tránh</th></tr></thead><tbody>
+<tr><td><b>1</b></td><td>Cài công cụ AI, tự làm bài tính cách, nhận file Excel</td><td>File Excel 7 trang</td><td>Biết nhóm tính cách</td><td>Bỏ qua bước tự hiểu mình</td></tr>
+<tr><td><b>2–3</b></td><td>Đăng 2 bài chia sẻ chuyện đời thực bằng câu lệnh Buổi 1</td><td>Câu lệnh Buổi 1</td><td>Có 5–10 tương tác</td><td>Viết như quảng cáo</td></tr>
+<tr><td><b>4</b></td><td>Ngồi dự 2 buổi cafe cùng trưởng nhóm (2-kèm-1)</td><td>Bộ slide 1-1</td><td>Xem cách mở lời thật</td><td>Bị bắt học thuộc bài dài</td></tr>
+<tr><td><b>5</b></td><td>Nhập 5 người quen vào file Excel, dùng câu lệnh 3 chọn 1 người hẹn</td><td>Câu lệnh 3</td><td>Có 1 lịch hẹn cafe</td><td>Lập danh sách 100 người thân</td></tr>
+<tr><td><b>6–7</b></td><td>Hoàn thành chứng chỉ cơ bản, nhận khoản thu nhập đầu tiên</td><td>Tài liệu cơ bản</td><td>Có chứng chỉ</td><td>Bỏ dở giữa chừng</td></tr>
+</tbody></table>
+<p><b>C. Kiểm chứng:</b> mọi bước đều dưới 15 phút/ngày, người mới có buổi hẹn 1-1 đầu tiên trong 7 ngày mà không áp lực.</p></div></div></div>
+  <div><div class="colh"><b>3</b><span>Lần trước sai gì, đã sửa ra sao</span></div>
+   <div class="box rv"><section class="bad"><h4>Lần chạy trước bị lỗi</h4><ul><li>Đúc kết kiểu khẩu hiệu (“chăm chỉ gọi điện mỗi ngày”).</li><li>Làm thành lịch 14 ngày dù câu lệnh yêu cầu 7 ngày.</li><li>Tự đặt chỉ tiêu không có trong dữ liệu.</li></ul></section>
+   <section class="fix"><h4>Đã thêm vào câu lệnh</h4><ul><li>Mỗi công thức theo dạng “Khi gặp → Làm → Kết quả”, lấy từ ca thật.</li><li>Bảng đúng 7 ngày, có cột “Xong khi” và “Lỗi hay gặp”.</li><li>Mỗi việc không quá 15 phút; chỉ dùng số có trong dữ liệu.</li></ul></section>
+   <section class="good"><h4>Chạy lại thì thấy</h4><ul><li>Ba công thức đều lấy từ ca có thật trong lịch sử chăm sóc.</li><li>Người mới đọc là biết ngày nào làm gì.</li></ul></section></div></div>
+ </div>
+</section></body></html>
