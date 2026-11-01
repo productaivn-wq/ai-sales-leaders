@@ -1,0 +1,1308 @@
+<!DOCTYPE html>
+<html lang="vi">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Workshop 01: AI Cho Thủ Lĩnh Bán Hàng - Phương Võ</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@400;500;600;700&family=JetBrains+Mono:wght@400;500;700&display=swap" rel="stylesheet">
+  <style>
+    :root {
+      --bg: #0B0B0D;
+      --card-bg: #131317;
+      --card-border: #23232B;
+      --orange: #FF6A00;
+      --orange-light: #FF8A3D;
+      --orange-dim: #1D140E;
+      --orange-border: #3D2312;
+      --text-white: #F5F2EE;
+      --text-gray: #A9A59E;
+      --text-dim: #686561;
+      --code-bg: #141419;
+      --red: #EF4444;
+      --green: #22C55E;
+      --blue: #3B82F6;
+    }
+
+    * {
+      box-sizing: border-box;
+      margin: 0;
+      padding: 0;
+    }
+
+    body {
+      background-color: var(--bg);
+      color: var(--text-white);
+      font-family: 'Space Grotesk', sans-serif;
+      overflow: hidden;
+      width: 100vw;
+      height: 100vh;
+      user-select: none;
+      display: flex;
+      flex-direction: column;
+    }
+
+    .deck-container {
+      width: 100vw;
+      height: calc(100vh - 56px);
+      position: relative;
+      overflow: hidden;
+    }
+
+    .slide {
+      position: absolute;
+      top: 0;
+      left: 0;
+      width: 100%;
+      height: 100%;
+      opacity: 0;
+      pointer-events: none;
+      transition: opacity 0.25s ease, transform 0.25s ease;
+      transform: translateX(16px);
+      padding: 30px 72px 24px 72px;
+      box-sizing: border-box;
+      display: flex;
+      flex-direction: column;
+      justify-content: flex-start;
+      overflow-y: auto;
+    }
+
+    .slide.active {
+      opacity: 1;
+      pointer-events: auto;
+      transform: translateX(0);
+    }
+
+    .left-accent {
+      position: absolute;
+      left: 0;
+      top: 0;
+      width: 6px;
+      height: 100%;
+      background: var(--orange);
+    }
+
+    /* Top Bar */
+    .top-bar {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      border-bottom: 1px solid #1C1C22;
+      padding-bottom: 12px;
+      flex-shrink: 0;
+    }
+
+    .tag-container {
+      display: flex;
+      align-items: center;
+      gap: 12px;
+    }
+
+    .badge-session {
+      font-family: 'JetBrains Mono', monospace;
+      font-size: 11.5px;
+      padding: 4px 10px;
+      border-radius: 4px;
+      font-weight: 700;
+      letter-spacing: 1px;
+      text-transform: uppercase;
+      background: rgba(255, 106, 0, 0.14);
+      color: var(--orange-light);
+      border: 1px solid rgba(255, 106, 0, 0.3);
+    }
+
+    .session-title {
+      font-family: 'JetBrains Mono', monospace;
+      font-size: 12.5px;
+      color: var(--text-gray);
+      letter-spacing: 0.8px;
+    }
+
+    .timer-badge {
+      font-family: 'JetBrains Mono', monospace;
+      font-size: 12px;
+      color: var(--text-dim);
+      letter-spacing: 1px;
+    }
+
+    /* Content Area: Well-Distributed Layout */
+    .content-area {
+      flex: 1;
+      display: flex;
+      flex-direction: column;
+      justify-content: flex-start;
+      padding: 24px 0 16px 0;
+      gap: 22px;
+    }
+
+    .slide-header {
+      display: flex;
+      flex-direction: column;
+    }
+
+    .eyebrow {
+      font-family: 'JetBrains Mono', monospace;
+      font-size: 12px;
+      letter-spacing: 2px;
+      color: var(--orange);
+      margin-bottom: 6px;
+      text-transform: uppercase;
+      font-weight: 600;
+    }
+
+    h1 {
+      font-size: 40px;
+      line-height: 1.15;
+      font-weight: 700;
+      letter-spacing: -0.8px;
+      margin-bottom: 8px;
+      color: var(--text-white);
+    }
+
+    h2 {
+      font-size: 21px;
+      font-weight: 500;
+      color: var(--orange-light);
+      margin-bottom: 8px;
+    }
+
+    .punchline {
+      font-size: 17px;
+      line-height: 1.45;
+      color: var(--text-gray);
+      max-width: 1100px;
+    }
+
+    .punchline strong {
+      color: var(--text-white);
+    }
+
+    /* Grids */
+    .grid-2 {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 22px;
+      align-items: stretch;
+    }
+
+    .grid-3 {
+      display: grid;
+      grid-template-columns: 1fr 1fr 1fr;
+      gap: 20px;
+      align-items: stretch;
+    }
+
+    .grid-4 {
+      display: grid;
+      grid-template-columns: repeat(4, 1fr);
+      gap: 16px;
+      align-items: stretch;
+    }
+
+    .grid-5 {
+      display: grid;
+      grid-template-columns: repeat(5, 1fr);
+      gap: 14px;
+      align-items: stretch;
+    }
+
+    /* Cards */
+    .card {
+      background: var(--card-bg);
+      border: 1px solid var(--card-border);
+      border-radius: 8px;
+      padding: 24px 22px;
+      display: flex;
+      flex-direction: column;
+      justify-content: space-between;
+      min-height: 220px;
+      transition: border-color 0.2s;
+    }
+
+    .card:hover {
+      border-color: #383846;
+    }
+
+    .card.highlight {
+      background: var(--orange-dim);
+      border-color: var(--orange-border);
+    }
+
+    .card-main {
+      display: flex;
+      flex-direction: column;
+    }
+
+    .card-tag {
+      font-family: 'JetBrains Mono', monospace;
+      font-size: 11.5px;
+      font-weight: 700;
+      letter-spacing: 1.5px;
+      color: var(--orange);
+      margin-bottom: 8px;
+      text-transform: uppercase;
+    }
+
+    .card h3 {
+      font-size: 19px;
+      font-weight: 600;
+      color: var(--text-white);
+      margin-bottom: 8px;
+      line-height: 1.3;
+    }
+
+    .card p {
+      font-size: 14.5px;
+      line-height: 1.5;
+      color: var(--text-gray);
+    }
+
+    .card ul {
+      list-style: none;
+      margin-top: 6px;
+    }
+
+    .card li {
+      font-size: 14px;
+      line-height: 1.5;
+      color: var(--text-gray);
+      margin-bottom: 6px;
+    }
+
+    .card li strong {
+      color: var(--text-white);
+    }
+
+    .card-badge {
+      font-family: 'JetBrains Mono', monospace;
+      font-size: 11.5px;
+      color: var(--orange-light);
+      background: rgba(255, 106, 0, 0.08);
+      border: 1px solid rgba(255, 106, 0, 0.22);
+      padding: 5px 10px;
+      border-radius: 4px;
+      margin-top: 14px;
+      display: inline-flex;
+      align-items: center;
+      gap: 6px;
+      font-weight: 500;
+      align-self: flex-start;
+    }
+
+    /* About Me Grid */
+    .grid-about {
+      display: grid;
+      grid-template-columns: 260px 1fr;
+      gap: 40px;
+      align-items: center;
+      max-width: 1040px;
+      padding-top: 8px;
+    }
+
+    .photo-wrapper {
+      position: relative;
+      width: 250px;
+      height: 320px;
+    }
+
+    .photo-accent {
+      position: absolute;
+      top: 12px;
+      left: 12px;
+      width: 100%;
+      height: 100%;
+      background: var(--orange);
+      border-radius: 6px;
+      z-index: 1;
+    }
+
+    .photo-img {
+      position: absolute;
+      top: 0;
+      left: 0;
+      width: 100%;
+      height: 100%;
+      object-fit: cover;
+      border-radius: 6px;
+      background: #18181D;
+      z-index: 2;
+      filter: grayscale(0.08) contrast(1.05);
+      border: 1px solid #2B2B35;
+    }
+
+    .about-bio h1 {
+      font-size: 46px;
+      line-height: 1.05;
+      margin-bottom: 6px;
+    }
+
+    .about-role {
+      font-size: 22px;
+      font-weight: 500;
+      color: var(--orange-light);
+      margin-bottom: 14px;
+    }
+
+    .about-line {
+      width: 90px;
+      height: 3px;
+      background: var(--orange);
+      margin-bottom: 16px;
+    }
+
+    .about-desc {
+      font-size: 15px;
+      line-height: 1.55;
+      color: var(--text-gray);
+      margin-bottom: 10px;
+    }
+
+    .about-tags {
+      display: flex;
+      gap: 10px;
+      margin-top: 16px;
+    }
+
+    .about-tag-pill {
+      font-family: 'JetBrains Mono', monospace;
+      font-size: 11.5px;
+      padding: 5px 12px;
+      background: #16161D;
+      border: 1px solid #282834;
+      border-radius: 4px;
+      color: #DDD;
+      letter-spacing: 0.5px;
+    }
+
+    /* Minimal Matrix Display */
+    .matrix-box {
+      display: grid;
+      grid-template-columns: repeat(5, 1fr);
+      gap: 12px;
+      background: #101014;
+      border: 1px solid #22222A;
+      border-radius: 8px;
+      padding: 16px;
+    }
+
+    .matrix-step {
+      display: flex;
+      flex-direction: column;
+      gap: 6px;
+      background: #15151C;
+      border: 1px solid #22222D;
+      padding: 14px 12px;
+      border-radius: 6px;
+      justify-content: space-between;
+      min-height: 180px;
+    }
+
+    .matrix-step-num {
+      font-family: 'JetBrains Mono', monospace;
+      font-size: 11px;
+      font-weight: 700;
+      color: var(--orange);
+      letter-spacing: 1px;
+    }
+
+    .matrix-step-title {
+      font-size: 15px;
+      font-weight: 600;
+      color: var(--text-white);
+    }
+
+    .matrix-step-val {
+      font-size: 13px;
+      line-height: 1.4;
+      color: var(--text-gray);
+      background: #1B1B24;
+      border: 1px solid #292938;
+      padding: 8px;
+      border-radius: 4px;
+    }
+
+    pre {
+      background: var(--code-bg);
+      border: 1px solid #262630;
+      border-left: 4px solid var(--orange);
+      padding: 18px 22px;
+      border-radius: 6px;
+      font-family: 'JetBrains Mono', monospace;
+      font-size: 13.5px;
+      color: #E2DFD8;
+      overflow-x: auto;
+      line-height: 1.55;
+    }
+
+    /* Permanent Bottom Dock (Single SSOT Footer) */
+    .deck-footer {
+      height: 56px;
+      width: 100vw;
+      background: #09090C;
+      border-top: 1px solid #1C1C24;
+      display: grid;
+      grid-template-columns: 1fr auto 1fr;
+      align-items: center;
+      padding: 0 40px;
+      box-sizing: border-box;
+      position: fixed;
+      bottom: 0;
+      left: 0;
+      z-index: 9999;
+    }
+
+    .dock-left {
+      display: flex;
+      align-items: center;
+      gap: 10px;
+      overflow: hidden;
+    }
+
+    .dock-brand {
+      font-family: 'JetBrains Mono', monospace;
+      font-size: 12px;
+      font-weight: 700;
+      color: var(--orange);
+      letter-spacing: 1px;
+      white-space: nowrap;
+    }
+
+    .dock-sep {
+      color: #33333F;
+      font-size: 12px;
+    }
+
+    .dock-role {
+      font-family: 'JetBrains Mono', monospace;
+      font-size: 12px;
+      color: var(--text-dim);
+      letter-spacing: 0.8px;
+      white-space: nowrap;
+      overflow: hidden;
+      text-overflow: ellipsis;
+    }
+
+    .dock-center {
+      display: flex;
+      align-items: center;
+      gap: 12px;
+      justify-content: center;
+    }
+
+    .nav-btn {
+      background: #14141A;
+      border: 1px solid #282834;
+      color: var(--text-white);
+      padding: 6px 16px;
+      border-radius: 4px;
+      font-family: 'JetBrains Mono', monospace;
+      font-size: 12px;
+      font-weight: 600;
+      cursor: pointer;
+      transition: all 0.2s ease;
+      user-select: none;
+    }
+
+    .nav-btn:hover {
+      background: var(--orange);
+      color: #09090C;
+      border-color: var(--orange);
+    }
+
+    .nav-btn:active {
+      transform: scale(0.97);
+    }
+
+    .nav-counter {
+      font-family: 'JetBrains Mono', monospace;
+      font-size: 13px;
+      font-weight: 700;
+      color: var(--text-white);
+      letter-spacing: 1.5px;
+      min-width: 74px;
+      text-align: center;
+      background: #121217;
+      padding: 5px 12px;
+      border-radius: 4px;
+      border: 1px solid #22222C;
+    }
+
+    .dock-right {
+      display: flex;
+      justify-content: flex-end;
+      align-items: center;
+    }
+
+    .dock-hint {
+      font-family: 'JetBrains Mono', monospace;
+      font-size: 11.5px;
+      color: var(--text-dim);
+      letter-spacing: 0.5px;
+    }
+  </style>
+</head>
+<body>
+
+  <div class="deck-container">
+    <div class="left-accent"></div>
+
+    <!-- SLIDE 01: COVER -->
+    <div class="slide active" data-slide="1">
+      <div class="top-bar">
+        <div class="tag-container">
+          <span class="badge-session">SESSION 01 · 120 PHÚT · 14:00 – 16:00</span>
+          <span class="session-title">THỰC HÀNH AI CHO QUẢN LÝ KINH DOANH</span>
+        </div>
+        <div class="timer-badge">COFELI QUÁN SỨ</div>
+      </div>
+      <div class="content-area">
+        <div class="slide-header">
+          <p class="eyebrow">DÀNH CHO HỌC VIÊN MỚI TIẾP CẬN AI</p>
+          <h1>AI Cho Thủ Lĩnh Bán Hàng</h1>
+          <h2>Tuyển Dụng Qua Ma Trận Nội Dung & Dữ Liệu Đời Thực</h2>
+          <p class="punchline">
+            Không học mẹo vặt. Làm chủ <strong>Tư duy quản lý AI</strong>, nắm bắt <strong>Bản đồ góc chạm</strong> và tự tay hoàn thành 1 bài viết thật trên máy tính.
+          </p>
+        </div>
+        <div class="grid-2" style="max-width: 980px;">
+          <div class="card">
+            <div class="card-main">
+              <div class="card-tag">ĐỐI TƯỢNG HỌC VIÊN</div>
+              <h3>3 Quản lý kinh doanh</h3>
+              <p>Phụ trách tuyển dụng đội ngũ trong ngành Bảo hiểm & Chăm sóc Sức khỏe, bắt đầu từ số 0 với AI.</p>
+            </div>
+            <div class="card-badge">🎯 Xuất phát điểm: Bắt đầu từ số 0</div>
+          </div>
+          <div class="card highlight">
+            <div class="card-main">
+              <div class="card-tag">KẾT QUẢ BUỔI 1</div>
+              <h3>1 Góc chạm · 1 Bài viết thật</h3>
+              <p>Hiểu bản chất phần mềm AI, chọn đúng 1 góc chạm trong ma trận và tự tay hoàn thành 1 bài viết đăng mạng xã hội.</p>
+            </div>
+            <div class="card-badge">✅ Cam kết: Có sản phẩm thật tại lớp</div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- SLIDE 02: ABOUT ME -->
+    <div class="slide" data-slide="2">
+      <div class="top-bar">
+        <div class="tag-container">
+          <span class="badge-session">ABOUT ME</span>
+          <span class="session-title">GIỚI THIỆU DIỄN GIẢ</span>
+        </div>
+        <div class="timer-badge">ĐỒNG HÀNH TRỰC TIẾP</div>
+      </div>
+      <div class="content-area">
+        <div class="grid-about">
+          <div class="photo-wrapper">
+            <div class="photo-accent"></div>
+            <img class="photo-img" src="assets/phuong.jpg" onerror="this.onerror=null;this.src='../../assets/phuong.jpg'" alt="Phương Võ">
+          </div>
+          <div class="about-bio">
+            <p class="eyebrow">GIẢNG VIÊN HUẤN LUYỆN</p>
+            <h1>Phương Võ</h1>
+            <div class="about-role">AI Architect & Business Technologist</div>
+            <div class="about-line"></div>
+            <p class="about-desc">
+              Chuyên gia tư vấn kiến trúc AI và tối ưu hóa quy trình kinh doanh. Tập trung chuyển giao công nghệ thành kết quả thực tế cho đội ngũ bán hàng.
+            </p>
+            <p class="about-desc" style="color: #DDD;">
+              Triết lý đào tạo: <strong>Không dạy lý thuyết hàn lâm · Lấy Tư duy quản lý & Ma trận chiến lược dẫn đường · Học viên tự tay làm chủ bài viết tại lớp.</strong>
+            </p>
+            <div class="about-tags">
+              <span class="about-tag-pill">CHIẾN LƯỢC MA TRẬN</span>
+              <span class="about-tag-pill">LOẠI BỎ AI SLOP</span>
+              <span class="about-tag-pill">THỰC HÀNH TẠI CHỖ</span>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- SLIDE 03: PHẦN MỀM TRƯỚC AI VS SAU AI -->
+    <div class="slide" data-slide="3">
+      <div class="top-bar">
+        <div class="tag-container">
+          <span class="badge-session">BẢN CHẤT CÔNG NGHỆ</span>
+          <span class="session-title">SỰ THAY ĐỔI CỦA PHẦN MỀM TRONG KINH DOANH</span>
+        </div>
+        <div class="timer-badge">CASE STUDY THỰC TẾ</div>
+      </div>
+      <div class="content-area">
+        <div class="slide-header">
+          <h1>Phần Mềm Trước AI vs Phần Mềm Sau AI</h1>
+          <p class="punchline">
+            Cách con người tương tác với máy tính đã thay đổi hoàn toàn: <strong>Từ việc mò mẫm bấm nút sang giao việc theo mục tiêu</strong>.
+          </p>
+        </div>
+        <div class="grid-2">
+          <div class="card" style="border-top: 4px solid var(--red);">
+            <div class="card-main">
+              <div class="card-tag" style="color: var(--red);">TRƯỚC AI · ĐIỀU KHIỂN BẰNG NÚT BẤM (UI-DRIVEN)</div>
+              <h3>Thao tác form cứng nhắc</h3>
+              <ul>
+                <li>• Phần mềm được lập trình theo quy tắc cố định, người dùng phải tự phục vụ hệ thống.</li>
+                <li>• <strong>Ví dụ Đặt vé máy bay</strong>: Tự mở app, chọn điểm đi, điểm đến, ngày giờ, lọc hãng bay, so sánh giá qua 10 màn hình phức tạp.</li>
+                <li>• Muốn làm gì cũng phải học cách bấm từng nút.</li>
+              </ul>
+            </div>
+            <div class="card-badge" style="color: #F87171; border-color: rgba(239, 68, 68, 0.3); background: rgba(239, 68, 68, 0.08);">
+              ⚙️ Bản chất: Con người phục vụ giao diện phần mềm
+            </div>
+          </div>
+          <div class="card highlight" style="border-top: 4px solid var(--green);">
+            <div class="card-main">
+              <div class="card-tag" style="color: var(--green);">SAU AI · GIAO VIỆC THEO MỤC TIÊU (INTENT-DRIVEN)</div>
+              <h3>Đối thoại theo ý định</h3>
+              <ul>
+                <li>• Phần mềm hiểu ngôn ngữ tự nhiên, nắm bắt ngữ cảnh và tự động lên kế hoạch thực thi.</li>
+                <li>• <strong>Ví dụ Đặt vé máy bay</strong>: Chỉ cần ra lệnh: <em>"Đặt vé đi Đà Nẵng tối thứ Sáu, chỗ rộng, hạ cánh trước 21h, dưới 2 triệu"</em> &rarr; AI tự tìm và xử lý.</li>
+                <li>• Phần mềm trở thành trợ lý thông minh phục vụ bạn.</li>
+              </ul>
+            </div>
+            <div class="card-badge" style="color: #4ADE80; border-color: rgba(34, 197, 94, 0.3); background: rgba(34, 197, 94, 0.08);">
+              🤖 Bản chất: Phần mềm hiểu mục tiêu và tự hành động
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- SLIDE 04: MINDSET - TOOLSET - SKILLSET -->
+    <div class="slide" data-slide="4">
+      <div class="top-bar">
+        <div class="tag-container">
+          <span class="badge-session">KHUNG NĂNG LỰC</span>
+          <span class="session-title">MINDSET · SKILLSET · TOOLSET</span>
+        </div>
+        <div class="timer-badge">NỀN TẢNG BỀN VỮNG</div>
+      </div>
+      <div class="content-area">
+        <div class="slide-header">
+          <h1>Khung Năng Lực Làm Việc Cùng AI</h1>
+          <p class="punchline">
+            Đừng bắt đầu bằng việc chạy theo công cụ mới. Công cụ thay đổi hàng tuần, chỉ có <strong>Tư duy và Kỹ năng</strong> là tài sản bền vững:
+          </p>
+        </div>
+        <div class="grid-3">
+          <div class="card highlight">
+            <div class="card-main">
+              <div class="card-tag">TẦNG 1 · 80% THÀNH BẠI</div>
+              <h3>Mindset (Tư duy)</h3>
+              <p>Xem AI là nhân viên cấp dưới; hiểu cách để AI vừa suy nghĩ vừa làm việc theo quy trình chuẩn.</p>
+            </div>
+            <div class="card-badge">🧠 Kim chỉ nam định hướng</div>
+          </div>
+          <div class="card">
+            <div class="card-main">
+              <div class="card-tag">TẦNG 2 · VŨ KHÍ CỐT LÕI</div>
+              <h3>Skillset (Kỹ năng)</h3>
+              <p>Năng lực quản lý công việc (Task Management), bóc tách quy trình, ra đề bài và thẩm định kết quả.</p>
+            </div>
+            <div class="card-badge">🛠️ Kỹ năng quản trị công việc</div>
+          </div>
+          <div class="card">
+            <div class="card-main">
+              <div class="card-tag">TẦNG 3 · PHƯƠNG TIỆN THAY THẾ</div>
+              <h3>Toolset (Công cụ)</h3>
+              <p>ChatGPT, Claude, Gemini, Genspark... Công cụ có thể liên tục đổi mới, nhưng cách điều phối không đổi.</p>
+            </div>
+            <div class="card-badge">⚙️ Phương tiện thực thi</div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- SLIDE 05: MINDSET 1: XEM AI LÀ NHÂN VIÊN -->
+    <div class="slide" data-slide="5">
+      <div class="top-bar">
+        <div class="tag-container">
+          <span class="badge-session">TƯ DUY CỐT LÕI 1</span>
+          <span class="session-title">VAI TRÒ KHI LÀM VIỆC VỚI AI</span>
+        </div>
+        <div class="timer-badge">CHUYỂN ĐỔI TÂM THẾ</div>
+      </div>
+      <div class="content-area">
+        <div class="slide-header">
+          <h1>Mindset 1: Xem AI Là Nhân Viên – Ta Là Nhà Quản Lý</h1>
+          <p class="punchline">
+            Bạn không cần học kỹ thuật IT. Để điều khiển AI xuất sắc, bạn chỉ cần phát huy đúng <strong>năng lực quản lý đội ngũ</strong> của mình:
+          </p>
+        </div>
+        <div class="grid-3">
+          <div class="card">
+            <div class="card-main">
+              <div class="card-tag">BẢN CHẤT AI</div>
+              <h3>AI là Nhân viên thực tập</h3>
+              <p>AI cực kỳ chăm chỉ, đọc nhanh, nhưng thiếu trải nghiệm đời thực. Giao việc mơ hồ thì AI sẽ nhả văn mẫu vô hồn.</p>
+            </div>
+            <div class="card-badge">🤖 Nhân sự cần hướng dẫn</div>
+          </div>
+          <div class="card highlight">
+            <div class="card-main">
+              <div class="card-tag">VAI TRÒ CỦA BẠN</div>
+              <h3>Bạn là Nhà Quản lý</h3>
+              <p>Nhiệm vụ của bạn là: Xác định mục tiêu, cung cấp bối cảnh, giao việc rõ ràng và nghiệm thu chất lượng bài viết.</p>
+            </div>
+            <div class="card-badge">👔 Người chỉ huy & Ra quyết định</div>
+          </div>
+          <div class="card">
+            <div class="card-main">
+              <div class="card-tag">KỸ NĂNG CẦN THIẾT</div>
+              <h3>Quản lý Công việc & Dự án</h3>
+              <p>Kỹ năng cần học không phải code, mà là: <strong>Task Management & Project Management</strong> (Giao việc có cấu trúc).</p>
+            </div>
+            <div class="card-badge">📋 Năng lực quản trị mục tiêu</div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- SLIDE 06: MINDSET 2A: ĐỂ AI NGHĨ CHO MÌNH - ĐÀO TẠO BẢN THÂN -->
+    <div class="slide" data-slide="6">
+      <div class="top-bar">
+        <div class="tag-container">
+          <span class="badge-session">TƯ DUY CỐT LÕI 2A</span>
+          <span class="session-title">DÙNG AI ĐỂ ĐÀO TẠO BẢN THÂN</span>
+        </div>
+        <div class="timer-badge">KỸ THUẬT LÙI 3 BƯỚC</div>
+      </div>
+      <div class="content-area">
+        <div class="slide-header">
+          <h1>Mindset 2A: Dùng AI Đào Tạo Bản Thân (Lùi 3 Bước)</h1>
+          <p class="punchline">
+            Muốn nhờ AI dạy hoặc hướng dẫn một công việc mới, đừng hỏi kết quả ngay. Hãy chủ động <strong>Lùi 3 Bước</strong>:
+          </p>
+        </div>
+        <div class="grid-3">
+          <div class="card">
+            <div class="card-main">
+              <div class="card-tag">BƯỚC LÙI 1 · TIÊU CHUẨN</div>
+              <h3>Hỏi Best Practice ngành</h3>
+              <p>Yêu cầu AI cung cấp thông lệ tốt nhất: <em>"Trong ngành bảo hiểm, bài viết tuyển dụng xuất sắc cần tiêu chuẩn gì?"</em></p>
+            </div>
+            <div class="card-badge">🥇 Nắm chuẩn mực cao nhất</div>
+          </div>
+          <div class="card highlight">
+            <div class="card-main">
+              <div class="card-tag">BƯỚC LÙI 2 · DỮ LIỆU</div>
+              <h3>Thu thập Relevant Data</h3>
+              <p>Cung cấp bối cảnh thực tế: Đặc điểm tệp ứng viên, chính sách hoa hồng, khó khăn và câu chuyện thật của bạn.</p>
+            </div>
+            <div class="card-badge">📊 Nạp bối cảnh thực tế</div>
+          </div>
+          <div class="card">
+            <div class="card-main">
+              <div class="card-tag">BƯỚC LÙI 3 · THỰC THI</div>
+              <h3>Lập Kế Hoạch & Kaizen</h3>
+              <p>Nhờ AI lập kế hoạch triển khai từng bước, thực hành viết thử và liên tục cải tiến (Kaizen) theo kết quả.</p>
+            </div>
+            <div class="card-badge">🔄 Triển khai & Cải tiến liên tục</div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- SLIDE 07: MINDSET 2B: ĐỂ AI LÀM CHO MÌNH - THỰC THI THEO SOP -->
+    <div class="slide" data-slide="7">
+      <div class="top-bar">
+        <div class="tag-container">
+          <span class="badge-session">TƯ DUY CỐT LÕI 2B</span>
+          <span class="session-title">ĐỂ AI LÀM VIỆC THEO QUY TRÌNH</span>
+        </div>
+        <div class="timer-badge">LÙI 3 BƯỚC THEO SOP</div>
+      </div>
+      <div class="content-area">
+        <div class="slide-header">
+          <h1>Mindset 2B: Để AI Thực Thi Theo Quy Trình Chuẩn (SOP)</h1>
+          <p class="punchline">
+            Muốn AI làm việc chính xác thay bạn mà không bị chệch hướng, hãy bắt AI <strong>Lùi 3 Bước theo SOP</strong>:
+          </p>
+        </div>
+        <div class="grid-3">
+          <div class="card highlight">
+            <div class="card-main">
+              <div class="card-tag">BƯỚC LÙI 1 · QUY TRÌNH</div>
+              <h3>Tuân thủ SOP chuẩn</h3>
+              <p>Bắt buộc AI làm theo đúng quy trình vận hành chuẩn (SOP) đã định, không cho phép AI tự sáng tác tùy tiện.</p>
+            </div>
+            <div class="card-badge">📑 Kỷ luật quy trình chuẩn</div>
+          </div>
+          <div class="card">
+            <div class="card-main">
+              <div class="card-tag">BƯỚC LÙI 2 · DỮ LIỆU</div>
+              <h3>Nạp Relevant Data đầu vào</h3>
+              <p>Thu thập và đưa vào đầy đủ thông tin ứng viên, số liệu thu nhập minh bạch và chất liệu đời thực của đội nhóm.</p>
+            </div>
+            <div class="card-badge">📂 Dữ liệu đầu vào chính xác</div>
+          </div>
+          <div class="card">
+            <div class="card-main">
+              <div class="card-tag">BƯỚC LÙI 3 · KẾ HOẠCH</div>
+              <h3>Lập Kế hoạch trước khi chạy</h3>
+              <p>Yêu cầu AI trình bày dàn bài và các bước thực thi chi tiết để bạn duyệt trước khi viết thành bài hoàn chỉnh.</p>
+            </div>
+            <div class="card-badge">📝 Lập kế hoạch thực thi</div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- SLIDE 08: 5 THÀNH TỐ CẤU THÀNH CỦA MỌI CÂU LỆNH -->
+    <div class="slide" data-slide="8">
+      <div class="top-bar">
+        <div class="tag-container">
+          <span class="badge-session">CẤU TRÚC RA LỆNH</span>
+          <span class="session-title">5 THÀNH TỐ CỐT LÕI CỦA CÂU LỆNH AI</span>
+        </div>
+        <div class="timer-badge">PROMPT ARCHITECTURE</div>
+      </div>
+      <div class="content-area">
+        <div class="slide-header">
+          <h1>5 Thành Tố Bắt Buộc Của Mọi Câu Lệnh AI</h1>
+          <p class="punchline">
+            Một câu lệnh chuyên nghiệp không phải văn nói vu vơ. Nó được ghép từ <strong>5 viên gạch bắt buộc</strong> sau:
+          </p>
+        </div>
+        <div class="grid-5">
+          <div class="card">
+            <div class="card-main">
+              <div class="card-tag">1. ROLE</div>
+              <h3>Vai trò</h3>
+              <p>Đóng vai cố vấn tuyển dụng bảo hiểm & chăm sóc sức khỏe.</p>
+            </div>
+            <div class="card-badge">Giao vai chuyên gia</div>
+          </div>
+          <div class="card">
+            <div class="card-main">
+              <div class="card-tag">2. TASK</div>
+              <h3>Nhiệm vụ</h3>
+              <p>Soạn 1 bài viết chia sẻ cơ hội công việc kinh doanh làm thêm.</p>
+            </div>
+            <div class="card-badge">Việc cần hoàn thành</div>
+          </div>
+          <div class="card highlight">
+            <div class="card-main">
+              <div class="card-tag">3. CONTEXT</div>
+              <h3>Bối cảnh</h3>
+              <p>Đối tượng nhận tin, nỗi đau thu nhập và câu chuyện thật của bạn.</p>
+            </div>
+            <div class="card-badge">Dữ liệu đời thực</div>
+          </div>
+          <div class="card">
+            <div class="card-main">
+              <div class="card-tag">4. STEPS</div>
+              <h3>Các bước</h3>
+              <p>Quy trình: Nêu nỗi đau &rarr; Kể chuyện thật &rarr; Lời mời mở.</p>
+            </div>
+            <div class="card-badge">Trình tự thực thi</div>
+          </div>
+          <div class="card">
+            <div class="card-main">
+              <div class="card-tag">5. FORMAT</div>
+              <h3>Định dạng</h3>
+              <p>Facebook 300 từ, tự nhiên, cấm văn mẫu sáo rỗng, cấm khoe tiền.</p>
+            </div>
+            <div class="card-badge">Quy chuẩn đầu ra</div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- SLIDE 09: VÌ SAO BÀI VIẾT AI BỊ BỎ QUA (AI SLOP) -->
+    <div class="slide" data-slide="9">
+      <div class="top-bar">
+        <div class="tag-container">
+          <span class="badge-session">GIỚI HẠN CỦA MÔ HÌNH</span>
+          <span class="session-title">VÌ SAO BÀI VIẾT AI THƯỜNG BỊ BỎ QUA?</span>
+        </div>
+        <div class="timer-badge">BẪY AI SLOP</div>
+      </div>
+      <div class="content-area">
+        <div class="slide-header">
+          <h1>Giới Hạn Của AI: AI Slop & Sự Thiếu Vắng Đời Thực</h1>
+          <p class="punchline">
+            Dù biết mẹo viết prompt, nếu thiếu dữ liệu đời thực, AI sẽ luôn sinh ra văn mẫu công thức (<strong>AI Slop</strong>):
+          </p>
+        </div>
+        <div class="grid-2">
+          <div class="card" style="border-top: 4px solid var(--red);">
+            <div class="card-main">
+              <div class="card-tag" style="color: var(--red);">AI THIẾU ĐỜI THỰC (AI SLOP)</div>
+              <h3>Văn mẫu khuôn sáo</h3>
+              <ul>
+                <li>• AI là mô hình đoán chữ tiếp theo, không có uy tín cá nhân và kỷ niệm nghề nghiệp thật của bạn.</li>
+                <li>• Càng prompt chung chung, bài viết càng khoe mẽ, xa lạ.</li>
+                <li>• Người quen đọc vào nhận ra ngay và mất lòng tin.</li>
+              </ul>
+            </div>
+            <div class="card-badge" style="color: #F87171; border-color: rgba(239, 68, 68, 0.3); background: rgba(239, 68, 68, 0.08);">
+              ⚠️ Không thể xóa bỏ AI slop nếu thiếu đời thực
+            </div>
+          </div>
+          <div class="card highlight" style="border-top: 4px solid var(--green);">
+            <div class="card-main">
+              <div class="card-tag" style="color: var(--green);">GIẢI PHÁP CỦA THỦ LĨNH</div>
+              <h3>Ma trận & Dữ liệu thật</h3>
+              <ul>
+                <li>• <strong>Ma trận nội dung</strong>: Bản đồ định hình đối tượng và góc tiếp cận trước khi mở AI.</li>
+                <li>• <strong>Dữ liệu đời thực</strong>: Đưa kỷ niệm có thật của chính bạn vào bối cảnh câu lệnh.</li>
+                <li>• <strong>Lọc sạch slop</strong>: Tự tay giữ lại giọng văn mộc mạc và chân thành.</li>
+              </ul>
+            </div>
+            <div class="card-badge" style="color: #4ADE80; border-color: rgba(34, 197, 94, 0.3); background: rgba(34, 197, 94, 0.08);">
+              🛡️ Ma trận dẫn đường + Đời thực làm giàu bài viết
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- SLIDE 10: MA TRẬN NỘI DUNG: BẢN ĐỒ CÁC GÓC NHÌN -->
+    <div class="slide" data-slide="10">
+      <div class="top-bar">
+        <div class="tag-container">
+          <span class="badge-session">KHUNG CHIẾN LƯỢC</span>
+          <span class="session-title">CONTENT MATRIX FRAMEWORK</span>
+        </div>
+        <div class="timer-badge">BẢN ĐỒ CÁC GÓC NHÌN</div>
+      </div>
+      <div class="content-area">
+        <div class="slide-header">
+          <h1>Ma Trận Nội Dung: Bản Đồ Các Góc Nhìn</h1>
+          <p class="punchline">
+            Ma trận là chiếc la bàn chiến lược. Toàn bộ hoạt động tạo bài viết đều xoay quanh <strong>5 trục cốt lõi</strong>:
+          </p>
+        </div>
+        <div class="grid-5">
+          <div class="card">
+            <div class="card-main">
+              <div class="card-tag">1. AI? (PERSONAS)</div>
+              <h3>Ứng viên</h3>
+              <p>Dân văn phòng, mẹ bỉm sữa hay người kinh doanh tự do.</p>
+            </div>
+            <div class="card-badge">Tệp độc giả mục tiêu</div>
+          </div>
+          <div class="card">
+            <div class="card-main">
+              <div class="card-tag">2. ĐAU GÌ? (NEEDS)</div>
+              <h3>Nỗi đau</h3>
+              <p>Lương trần, sa thải, con cái tốn kém, thiếu thời gian.</p>
+            </div>
+            <div class="card-badge">Nhu cầu & Nỗi sợ thật</div>
+          </div>
+          <div class="card highlight">
+            <div class="card-main">
+              <div class="card-tag">3. CÓ GÌ? (SOLUTIONS)</div>
+              <h3>Giải pháp</h3>
+              <p>Nghề tay trái 1-2h/tối, quy trình có sẵn, kèm cặp 1-1.</p>
+            </div>
+            <div class="card-badge">Giá trị hệ thống mang lại</div>
+          </div>
+          <div class="card">
+            <div class="card-main">
+              <div class="card-tag">4. GÓC NÀO? (ANGLES)</div>
+              <h3>Góc tiếp cận</h3>
+              <p>Góc đồng cảm, phân tích số liệu hay chuyện nhân chứng.</p>
+            </div>
+            <div class="card-badge">Góc nhìn kể chuyện</div>
+          </div>
+          <div class="card">
+            <div class="card-main">
+              <div class="card-tag">5. ĐĂNG ĐÂU? (CHANNELS)</div>
+              <h3>Kênh đăng</h3>
+              <p>Facebook bài dài, Zalo nhật ký ngắn hay video ngắn 60s.</p>
+            </div>
+            <div class="card-badge">Định dạng xuất bản</div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- SLIDE 11: MỖI BÀI VIẾT: CHỌN 1 GÓC CHẠM DUY NHẤT -->
+    <div class="slide" data-slide="11">
+      <div class="top-bar">
+        <div class="tag-container">
+          <span class="badge-session">BẢN CHẤT THỰC THI</span>
+          <span class="session-title">MỖI BÀI VIẾT: CHỌN 1 GÓC CHẠM</span>
+        </div>
+        <div class="timer-badge">ĐƠN GIẢN HÓA MA TRẬN</div>
+      </div>
+      <div class="content-area">
+        <div class="slide-header">
+          <h1>Mỗi Bài Viết: Chọn 1 Góc Chạm Duy Nhất</h1>
+          <p class="punchline">
+            Ma trận có hàng chục góc nhìn. Bạn <strong>không cần làm cả bảng</strong> — mỗi bài chỉ cần ghép <strong>1 góc chạm</strong>:
+          </p>
+        </div>
+        <div class="matrix-box">
+          <div class="matrix-step">
+            <div class="matrix-step-num">BƯỚC 1 · NÓI VỚI AI?</div>
+            <div class="matrix-step-title">Ứng viên mục tiêu</div>
+            <div class="matrix-step-val">Dân văn phòng (30 – 40 tuổi)</div>
+          </div>
+          <div class="matrix-step">
+            <div class="matrix-step-num">BƯỚC 2 · HỌ ĐANG ĐAU GÌ?</div>
+            <div class="matrix-step-title">Nỗi đau thực tế</div>
+            <div class="matrix-step-val">Lương trần 15-20tr, lo sa thải</div>
+          </div>
+          <div class="matrix-step">
+            <div class="matrix-step-num">BƯỚC 3 · MÌNH CÓ GÌ?</div>
+            <div class="matrix-step-title">Giải pháp đội nhóm</div>
+            <div class="matrix-step-val">Làm thêm online 1-2h/tối</div>
+          </div>
+          <div class="matrix-step">
+            <div class="matrix-step-num">BƯỚC 4 · NÓI GÓC NÀO?</div>
+            <div class="matrix-step-title">Góc chạm đời thực</div>
+            <div class="matrix-step-val">Kể lại cảm giác nhìn sao kê 2 năm trước</div>
+          </div>
+          <div class="matrix-step">
+            <div class="matrix-step-num">BƯỚC 5 · ĐĂNG ĐÂU?</div>
+            <div class="matrix-step-title">Kênh xuất bản</div>
+            <div class="matrix-step-val" style="color: var(--orange-light); font-weight: 600;">Facebook cá nhân (300 từ)</div>
+          </div>
+        </div>
+        <div class="card highlight" style="min-height: auto; padding: 18px 24px;">
+          <p style="font-size: 15px; color: var(--text-white);">
+            💡 <strong>Quy tắc vàng cho người bán hàng:</strong> 1 bài viết = 1 góc chạm cụ thể. Bài viết nhắm vào tất cả mọi người là bài viết không ai thèm đọc!
+          </p>
+        </div>
+      </div>
+    </div>
+
+    <!-- SLIDE 12: RÁP GÓC CHẠM VÀO 5 THÀNH TỐ CÂU LỆNH -->
+    <div class="slide" data-slide="12">
+      <div class="top-bar">
+        <div class="tag-container">
+          <span class="badge-session">THỰC THI TOÀN DIỆN</span>
+          <span class="session-title">RÁP GÓC CHẠM VÀO 5 THÀNH TỐ CÂU LỆNH</span>
+        </div>
+        <div class="timer-badge">PROMPT HOÀN CHỈNH</div>
+      </div>
+      <div class="content-area">
+        <div class="slide-header">
+          <h1>Ráp Góc Chạm Vào 5 Thành Tố Của Câu Lệnh</h1>
+          <p class="punchline">
+            Xem cách kết hợp 1 góc chạm thực tế với 5 thành tố câu lệnh để tạo ra đề bài hoàn hảo cho AI:
+          </p>
+        </div>
+        <pre><code>[1. ROLE]: Cố vấn tuyển dụng ngành Bảo hiểm & Chăm sóc Sức khỏe.
+[2. TASK]: Soạn bài viết chia sẻ cơ hội công việc kinh doanh làm thêm.
+[3. CONTEXT & GÓC CHẠM]:
+- Đối tượng: Nhân viên văn phòng 30-40 tuổi, áp lực chi tiêu con cái, sợ bấp bênh.
+- Chuyện thật của tôi: Từng làm kế toán 8 năm, lương 14tr mà học phí 2 con đã hết 7tr, từng rất bế tắc cuối tháng trước khi quyết định học thêm nghề thứ hai.
+- Giải pháp: Nghề tay trái online 1-2h/tối, quy trình có sẵn, được kèm cặp 1-1.
+[4. STEPS]:
+- Bước 1: Nêu lại áp lực chi tiêu cũ để tạo sự đồng cảm.
+- Bước 2: Kể bước ngoặt bắt đầu công việc làm thêm và cuộc sống thay đổi.
+- Bước 3: Lời mời mở chân thành cho 2 người muốn tìm hiểu nghiêm túc.
+[5. FORMAT]: Bài viết Facebook 300 từ, tự nhiên, cấm sáo rỗng, cấm khoe tiền.</code></pre>
+        <div class="card highlight" style="min-height: auto; padding: 16px 24px;">
+          <p style="font-size: 14.5px; color: var(--text-white);">
+            🎯 <strong>Kết quả:</strong> Khi câu lệnh đủ 5 thành tố và có dữ liệu góc chạm thật, AI không còn cơ hội nói nhảm hay nhả văn mẫu slop!
+          </p>
+        </div>
+      </div>
+    </div>
+
+    <!-- SLIDE 13: CẤU TRÚC BÀI VIẾT 3 PHẦN -->
+    <div class="slide" data-slide="13">
+      <div class="top-bar">
+        <div class="tag-container">
+          <span class="badge-session">CẤU TRÚC ĐẦU RA</span>
+          <span class="session-title">HÀNH TRÌNH TÂM LÝ 3 PHẦN</span>
+        </div>
+        <div class="timer-badge">CHẠM CẢM XÚC</div>
+      </div>
+      <div class="content-area">
+        <div class="slide-header">
+          <h1>Cấu Trúc Bài Viết: Chạm Cảm Xúc Người Đọc</h1>
+          <p class="punchline">
+            Người đọc ghét bị bán hàng. Bài viết tuyển dụng chuyển đổi tốt luôn tuân theo hành trình tâm lý 3 phần:
+          </p>
+        </div>
+        <div class="grid-3">
+          <div class="card">
+            <div class="card-main">
+              <div class="card-tag">1. ĐỜI THỰC (QUÁ KHỨ)</div>
+              <h3>Nỗi đau có thật</h3>
+              <p>Kể lại cảm giác bế tắc, áp lực tài chính trước đây của chính bạn để tạo sự đồng cảm sâu sắc.</p>
+            </div>
+            <div class="card-badge">Tâm lý: "Họ giống mình"</div>
+          </div>
+          <div class="card">
+            <div class="card-main">
+              <div class="card-tag">2. ĐỔI THAY (HIỆN TẠI)</div>
+              <h3>Kết quả mới</h3>
+              <p>Trải nghiệm nghề thứ hai: Tận dụng 1-2 giờ mỗi tối, thêm khoản thu nhập trang trải sinh hoạt gia đình.</p>
+            </div>
+            <div class="card-badge">Tâm lý: "Có lối thoát khả thi"</div>
+          </div>
+          <div class="card highlight">
+            <div class="card-main">
+              <div class="card-tag">3. LỜI MỜI (TƯƠNG LAI)</div>
+              <h3>Cơ hội đồng hành</h3>
+              <p>Lời mời mở chân thành: Nhận hướng dẫn 2 người thực sự muốn học việc nghiêm túc, không chèo kéo.</p>
+            </div>
+            <div class="card-badge">Tâm lý: "Muốn chủ động kết nối"</div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- SLIDE 14: THỰC HÀNH 60 PHÚT -->
+    <div class="slide" data-slide="14">
+      <div class="top-bar">
+        <div class="tag-container">
+          <span class="badge-session">PHẦN QUAN TRỌNG NHẤT</span>
+          <span class="session-title">THỰC HÀNH TRÊN MÁY TÍNH</span>
+        </div>
+        <div class="timer-badge">14:45 – 15:45 (60 PHÚT)</div>
+      </div>
+      <div class="content-area">
+        <div class="slide-header">
+          <h1>60 Phút Thực Hành: Tự Tay Tạo 1 Bài Viết Thật</h1>
+          <p class="punchline">
+            Giảng viên ngồi cạnh hỗ trợ từng học viên hoàn thành trọn vẹn 1 bài viết trên máy tính cá nhân:
+          </p>
+        </div>
+        <div class="grid-3">
+          <div class="card">
+            <div class="card-main">
+              <div class="card-tag">CHẶNG 1 (15 PHÚT)</div>
+              <h3>Chọn góc chạm</h3>
+              <p>Mỗi học viên chọn 1 tệp người mình muốn tuyển & góc kể chuyện phù hợp nhất với bản thân.</p>
+            </div>
+            <div class="card-badge">🎯 Mục tiêu: Xác định 1 góc tiếp cận</div>
+          </div>
+          <div class="card highlight">
+            <div class="card-main">
+              <div class="card-tag">CHẶNG 2 (20 PHÚT)</div>
+              <h3>Ráp 5 thành tố & AI viết</h3>
+              <p>Đưa bối cảnh và kỷ niệm thật vào câu lệnh, để AI dựng khung bài viết mạch lạc trong 30 giây.</p>
+            </div>
+            <div class="card-badge">⚡ Kết quả: Bản thảo đầu tiên</div>
+          </div>
+          <div class="card">
+            <div class="card-main">
+              <div class="card-tag">CHẶNG 3 (25 PHÚT)</div>
+              <h3>Lọc slop & Hoàn tất</h3>
+              <p>Chiếu bài lên màn hình chung, xóa bỏ từ sáo rỗng, chọn ảnh và lưu bài sẵn sàng đăng.</p>
+            </div>
+            <div class="card-badge">✅ Hoàn tất: 1 Bài viết sẵn sàng đăng</div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- SLIDE 15: NHIỆM VỤ VỀ NHÀ: MA TRẬN & ĐĂNG BÀI MỖI NGÀY -->
+    <div class="slide" data-slide="15">
+      <div class="top-bar">
+        <div class="tag-container">
+          <span class="badge-session">NHIỆM VỤ VỀ NHÀ TRƯỚC BUỔI 2</span>
+          <span class="session-title">RÈN LUYỆN KỶ LUẬT HÀNG NGÀY</span>
+        </div>
+        <div class="timer-badge">THỰC HÀNH MỖI NGÀY</div>
+      </div>
+      <div class="content-area">
+        <div class="slide-header">
+          <h1>Nhiệm Vụ Về Nhà: Lập Ma Trận & Đăng Bài Mỗi Ngày</h1>
+          <p class="punchline">
+            Rèn luyện kỷ luật mỗi ngày cho từng thành viên để biến tư duy quản lý AI thành phản xạ tự nhiên:
+          </p>
+        </div>
+        <div class="grid-3">
+          <div class="card">
+            <div class="card-main">
+              <div class="card-tag">NHIỆM VỤ 1 · MA TRẬN CÁ NHÂN</div>
+              <h3>Lập Ma Trận Nội Dung</h3>
+              <ul>
+                <li>• Từng anh chị trong nhóm tự tay hoàn thành 1 bảng <strong>Ma trận nội dung riêng</strong>.</li>
+                <li>• Xác định rõ 3–5 góc chạm (Chân dung ứng viên, Nỗi đau thu nhập, Giải pháp và Câu chuyện thật).</li>
+              </ul>
+            </div>
+            <div class="card-badge">📋 Kết quả: Ma trận nội dung cá nhân hóa</div>
+          </div>
+          <div class="card highlight">
+            <div class="card-main">
+              <div class="card-tag">NHIỆM VỤ 2 · THỰC HÀNH CÂU LỆNH</div>
+              <h3>Dùng Prompt Sinh Bài Viết</h3>
+              <ul>
+                <li>• Áp dụng đúng <strong>5 thành tố bắt buộc</strong>: Role, Task, Context đời thực, Steps, Format.</li>
+                <li>• Nạp chất liệu đời thực để AI chấp bút, gọt sạch AI Slop để câu từ tự nhiên, chân thực.</li>
+              </ul>
+            </div>
+            <div class="card-badge">✍️ Kỹ năng: 5 thành tố câu lệnh thực chiến</div>
+          </div>
+          <div class="card">
+            <div class="card-main">
+              <div class="card-tag">NHIỆM VỤ 3 · KỶ LUẬT XUẤT BẢN</div>
+              <h3>Đăng Bài Hàng Ngày & Đo Lường</h3>
+              <ul>
+                <li>• Đăng đều đặn <strong>mỗi ngày 1 bài</strong> kèm ảnh thật lên Facebook/Zalo cá nhân.</li>
+                <li>• Ghi lại danh sách <strong>3–5 người</strong> tương tác để mang đến thực chiến chuyển đổi tại Buổi 2.</li>
+              </ul>
+            </div>
+            <div class="card-badge">🚀 Mục tiêu: 1 bài/ngày + Danh sách tương tác</div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+  </div>
+
+  <!-- Dedicated Bottom Dock (Single SSOT Footer) -->
+  <footer class="deck-footer">
+    <div class="dock-left">
+      <span class="dock-brand">PHƯƠNG VÕ</span>
+      <span class="dock-sep">/</span>
+      <span class="dock-role">AI ARCHITECT & BUSINESS TECHNOLOGIST</span>
+    </div>
+
+    <div class="dock-center">
+      <button class="nav-btn" id="prevBtn" title="Slide trước (Phím ◀ hoặc PageUp)">◀ Trước</button>
+      <div class="nav-counter" id="slideCounter">01 / 15</div>
+      <button class="nav-btn" id="nextBtn" title="Slide sau (Phím ▶, Space hoặc PageDown)">Tiếp ▶</button>
+    </div>
+
+    <div class="dock-right">
+      <span class="dock-hint">⌨ Phím ◀ / ▶ hoặc Space để chuyển slide</span>
+    </div>
+  </footer>
+
+  <script>
+    const slides = document.querySelectorAll('.slide');
+    const slideCounter = document.getElementById('slideCounter');
+    let currentSlide = 0;
+
+    function showSlide(index) {
+      slides[currentSlide].classList.remove('active');
+      currentSlide = (index + slides.length) % slides.length;
+      slides[currentSlide].classList.add('active');
+      const curNum = String(currentSlide + 1).padStart(2, '0');
+      const totalNum = String(slides.length).padStart(2, '0');
+      if (slideCounter) {
+        slideCounter.textContent = `${curNum} / ${totalNum}`;
+      }
+    }
+
+    document.getElementById('prevBtn').addEventListener('click', () => showSlide(currentSlide - 1));
+    document.getElementById('nextBtn').addEventListener('click', () => showSlide(currentSlide + 1));
+
+    document.addEventListener('keydown', (e) => {
+      if (e.key === 'ArrowRight' || e.key === ' ' || e.key === 'PageDown') {
+        e.preventDefault();
+        showSlide(currentSlide + 1);
+      } else if (e.key === 'ArrowLeft' || e.key === 'PageUp') {
+        e.preventDefault();
+        showSlide(currentSlide - 1);
+      }
+    });
+  </script>
+
+<noscript><div class="offline-svg-failover"><svg width="400" height="80" xmlns="http://www.w3.org/2000/svg"><rect width="400" height="80" fill="#1e293b"/><text x="20" y="45" fill="#f8fafc" font-size="13">Offline SVG Failover (GW-CHART-FAILOVER-01)</text></svg></div></noscript>
+</body>
+</html>
